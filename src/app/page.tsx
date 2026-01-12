@@ -34,7 +34,7 @@ export default function Home() {
             Find Airbnbs & Guest Rooms in Meru
           </h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-neutral-200">
-            Your adventure starts here. Discover unique places to stay, from serene farm stays to vibrant town apartments.
+            Starting with Meru, expanding across Kenya.
           </p>
           <div className="mt-8 w-full max-w-2xl">
             <form className="flex flex-col sm:flex-row gap-2">
@@ -48,6 +48,7 @@ export default function Home() {
                 Search
               </Button>
             </form>
+            <p className="text-sm mt-2 text-neutral-300">More counties coming soon.</p>
           </div>
         </div>
       </section>

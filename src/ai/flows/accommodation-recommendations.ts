@@ -1,9 +1,9 @@
 'use server';
 
 /**
- * @fileOverview An AI agent that recommends accommodations based on user preferences.
+ * @fileOverview An AI agent that provides information about StaysKenya.
  * 
- * - recommendAccommodations - A function that recommends accommodations.
+ * - recommendAccommodations - A function that answers user questions about the platform.
  * - AccommodationPreferencesInput - The input type for the recommendAccommodations function.
  * - AccommodationRecommendationsOutput - The return type for the recommendAccommodations function.
  */
@@ -14,7 +14,7 @@ import {z} from 'genkit';
 const AccommodationPreferencesInputSchema = z.object({
   preferences: z
     .string()
-    .describe('User preferences for accommodations (e.g., quiet, family-friendly, near the beach).'),
+    .describe('User question about StaysKenya'),
   bookingHistory: z
     .string()
     .describe('A summary of the user booking history.'),
@@ -29,7 +29,7 @@ export type AccommodationPreferencesInput = z.infer<
 const AccommodationRecommendationsOutputSchema = z.object({
   recommendations: z
     .string()
-    .describe('A list of recommended accommodations based on the user preferences.'),
+    .describe('A helpful answer to the user\'s question.'),
 });
 export type AccommodationRecommendationsOutput = z.infer<
   typeof AccommodationRecommendationsOutputSchema
@@ -45,7 +45,16 @@ const prompt = ai.definePrompt({
   name: 'accommodationRecommendationsPrompt',
   input: {schema: AccommodationPreferencesInputSchema},
   output: {schema: AccommodationRecommendationsOutputSchema},
-  prompt: `You are an expert travel assistant that recommends accommodations to users.\n\n  Based on the user's preferences, booking history, and current search criteria, provide a list of recommended accommodations.\n\n  Preferences: {{{preferences}}}\n  Booking History: {{{bookingHistory}}}\n  Search Criteria: {{{searchCriteria}}}\n\n  Recommendations:`, // Ensure that the agent provides the recommended accommodations
+  prompt: `You are a helpful assistant for StaysKenya.
+You can only answer questions about the following topics:
+- How to post a listing
+- How guests contact hosts
+- Which areas are currently supported
+
+Do not answer questions about payments, booking confirmations, or any other topic. If the user asks about something else, politely state that you can only answer questions about the topics listed above.
+
+User's question: {{{preferences}}}
+`,
 });
 
 const recommendAccommodationsFlow = ai.defineFlow(

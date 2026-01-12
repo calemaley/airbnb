@@ -113,7 +113,7 @@ export default function PostListingPage() {
                                 <FormItem>
                                 <FormLabel className="text-lg">Location</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="e.g., Nkubu, Meru" {...field} />
+                                    <Input placeholder="e.g. Makutano, Meru Town" {...field} />
                                 </FormControl>
                                 <FormMessage />
                                 </FormItem>
@@ -128,6 +128,7 @@ export default function PostListingPage() {
                                 <FormControl>
                                     <Input type="number" {...field} />
                                 </FormControl>
+                                <FormDescription>Price per night (KES)</FormDescription>
                                 <FormMessage />
                                 </FormItem>
                             )}
@@ -147,6 +148,16 @@ export default function PostListingPage() {
                         </FormItem>
                     )}
                     />
+
+                    <FormItem>
+                        <FormLabel className="text-lg">AI Category Suggestion</FormLabel>
+                        <FormDescription>
+                        Paste a short review or description below and AI will suggest the best category for your property.
+                        </FormDescription>
+                        <FormControl>
+                            <Textarea rows={3} placeholder="e.g., A simple and clean room, great for travelers on a budget." disabled/>
+                        </FormControl>
+                    </FormItem>
 
                     <FormField
                         control={form.control}
@@ -230,7 +241,7 @@ export default function PostListingPage() {
 
 
                     <Button type="submit" size="lg" className="w-full md:w-auto" disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? "Submitting..." : "Submit for Approval"}
+                        {form.formState.isSubmitting ? "Submitting..." : "Submit Listing for Review"}
                     </Button>
                 </form>
                 </Form>

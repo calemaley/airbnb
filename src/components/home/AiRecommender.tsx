@@ -26,8 +26,8 @@ export default function AiRecommender() {
     try {
       const input: AccommodationPreferencesInput = {
         preferences: preferences,
-        bookingHistory: 'User has previously booked a family-friendly villa in Diani and a business apartment in Nairobi.',
-        searchCriteria: 'Looking for a stay in the Maasai Mara for 2 adults for 3 nights in July.',
+        bookingHistory: 'N/A', // Not used in the new prompt
+        searchCriteria: 'N/A', // Not used in the new prompt
       };
       const result = await recommendAccommodations(input);
       if (result?.recommendations) {
@@ -45,22 +45,22 @@ export default function AiRecommender() {
       <div className="mx-auto max-w-4xl text-center">
         <Sparkles className="mx-auto h-12 w-12 text-primary" />
         <h2 className="mt-4 text-3xl font-headline font-bold md:text-4xl">
-          Personalized Recommendations
+          StaysKenya Assistant
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          Tell us what you're looking for, and our AI will find the perfect stay for you.
+          Have a question? Ask our AI assistant.
         </p>
       </div>
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle>Describe Your Perfect Stay</CardTitle>
-            <CardDescription>e.g., "A quiet place near the beach for a family of 4" or "A budget-friendly room with good WiFi for remote work."</CardDescription>
+            <CardTitle>Ask a question</CardTitle>
+            <CardDescription>e.g., "How do I post a listing?" or "Which areas are supported?"</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <Textarea
-                placeholder="Your preferences..."
+                placeholder="Your question..."
                 value={preferences}
                 onChange={(e) => setPreferences(e.target.value)}
                 rows={5}
@@ -75,7 +75,7 @@ export default function AiRecommender() {
                 ) : (
                   <>
                     <Bot className="mr-2 h-4 w-4" />
-                    Get Recommendations
+                    Ask Assistant
                   </>
                 )}
               </Button>
@@ -87,7 +87,7 @@ export default function AiRecommender() {
             {loading && (
                 <div className="flex flex-col items-center justify-center h-full rounded-lg border border-dashed p-8 text-center animate-pulse">
                     <Bot className="h-12 w-12 text-muted-foreground" />
-                    <p className="mt-4 font-medium text-muted-foreground">Our AI is finding the best spots for you...</p>
+                    <p className="mt-4 font-medium text-muted-foreground">Our AI is thinking...</p>
                 </div>
             )}
             {error && (
@@ -101,7 +101,7 @@ export default function AiRecommender() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Sparkles className="h-5 w-5 text-primary" />
-                            Here are your recommendations:
+                            Answer:
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -114,7 +114,7 @@ export default function AiRecommender() {
             {!loading && !recommendations && !error && (
                  <div className="flex flex-col items-center justify-center h-full rounded-lg border border-dashed p-8 text-center">
                     <Bot className="h-12 w-12 text-muted-foreground" />
-                    <p className="mt-4 font-medium text-muted-foreground">Your personalized recommendations will appear here.</p>
+                    <p className="mt-4 font-medium text-muted-foreground">The answer will appear here.</p>
                 </div>
             )}
         </div>
