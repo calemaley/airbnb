@@ -31,7 +31,7 @@ export function PricingCard({ plan, price, features, isPopular, isFreeOfferAvail
                             <Gift className="h-5 w-5 text-green-600" />
                             <AlertTitle className="font-bold">First Year Free!</AlertTitle>
                             <AlertDescription>
-                                For being one of our first {5 - activeHostCount} hosts.
+                                For being one of our first {5} hosts.
                             </AlertDescription>
                         </Alert>
                     </div>
