@@ -20,8 +20,8 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Hotel className="h-6 w-6 text-primary" />
+        <Link href="/" className="mr-6 flex items-center space-x-2 group">
+          <Hotel className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-15deg]" />
           <span className="font-bold inline-block font-headline text-xl">StaysKenya</span>
         </Link>
 
