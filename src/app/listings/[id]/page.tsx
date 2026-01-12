@@ -1,8 +1,8 @@
+
 import { getListingById } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -22,8 +22,6 @@ import {
   Wind,
   MapPin,
   Waves,
-  CalendarDays,
-  Users,
 } from 'lucide-react';
 import type { Amenity } from '@/lib/types';
 import { Input } from '@/components/ui/input';

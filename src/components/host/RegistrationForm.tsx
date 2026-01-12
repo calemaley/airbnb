@@ -122,7 +122,7 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
             
             <div>
               <FormLabel>Payment Provider</FormLabel>
-              <p className="text-sm text-muted-foreground mb-2">This is a placeholder. In a real app, these would link to actual payment gateways.</p>
+              <p className="text-sm text-muted-foreground mb-2">This is a placeholder. In a real app, these would link to actual payment gateways for your subscription.</p>
               <div className="grid grid-cols-3 gap-4">
                   <Button type="button" variant="outline" className="h-16 flex-col">
                       <CreditCard className="mb-1"/> Stripe
