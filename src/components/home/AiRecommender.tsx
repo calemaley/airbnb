@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Bot, Loader2, Sparkles } from 'lucide-react';
-import { useFlow } from '@genkit-ai/next/react';
+import { useFlow } from '@genkit-ai/next/client';
 import {
   AccommodationPreferencesInput,
   recommendAccommodations,
