@@ -46,6 +46,7 @@ export default function Footer() {
             <strong>Disclaimer:</strong> StaysKenya is an advertising service only. All transactions and agreements are a private matter between the guest and the host.
           </p>
           <p>&copy; {new Date().getFullYear()} StaysKenya. All rights reserved.</p>
+          <p>Developed by Ralph tech</p>
         </div>
       </div>
     </footer>
