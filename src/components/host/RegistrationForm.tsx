@@ -84,7 +84,7 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
             <Gift className="h-5 w-5 text-green-600" />
             <AlertTitle className="font-bold">You're in luck!</AlertTitle>
             <AlertDescription>
-              You are one of the first {5 - activeHostCount} hosts! Your first year of the Standard Plan is completely free.
+              You are one of our first {5 - activeHostCount} hosts! Your first year of the Standard Plan is completely free.
             </AlertDescription>
           </Alert>
         )}
