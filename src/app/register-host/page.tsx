@@ -15,7 +15,7 @@ export default function RegisterHostPage() {
             Become a Host on StaysKenya
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Join our community of hosts and start earning today. We provide the tools and support you need to succeed.
+            Join our community of hosts in Meru and start earning today. We provide the tools and support you need to succeed.
           </p>
         </div>
 
@@ -25,7 +25,7 @@ export default function RegisterHostPage() {
             <ul className="space-y-4 text-lg">
               <li className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
-                <span><span className="font-bold">Local Focus:</span> We are a platform dedicated entirely to the Kenyan market.</span>
+                <span><span className="font-bold">Local Focus:</span> We are a platform dedicated entirely to the Meru market.</span>
               </li>
               <li className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
@@ -42,7 +42,7 @@ export default function RegisterHostPage() {
             </ul>
             <div className="mt-8 bg-secondary border border-primary/20 p-6 rounded-lg">
               <h3 className="font-headline text-xl font-semibold text-primary">Simple Annual Pricing</h3>
-              <p className="text-5xl font-bold mt-2">$99 <span className="text-lg font-normal text-muted-foreground">/ year</span></p>
+              <p className="text-5xl font-bold mt-2">KES 9,900 <span className="text-lg font-normal text-muted-foreground">/ year</span></p>
               <p className="mt-2 text-muted-foreground">This flat fee covers your listing's activation for one year. No commissions, no surprises.</p>
             </div>
           </div>

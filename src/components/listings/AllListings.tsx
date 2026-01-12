@@ -12,7 +12,7 @@ interface AllListingsProps {
   listings: Accommodation[];
 }
 
-const MAX_PRICE = 500;
+const MAX_PRICE = 50000;
 
 export default function AllListings({ listings }: AllListingsProps) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -70,18 +70,18 @@ export default function AllListings({ listings }: AllListingsProps) {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium">Price Range</label>
+                <label className="text-sm font-medium">Price Range (KES)</label>
                 <Slider
                   min={0}
                   max={MAX_PRICE}
-                  step={10}
+                  step={1000}
                   value={priceRange}
                   onValueChange={(value) => setPriceRange(value)}
                   className="mt-4"
                 />
                 <div className="flex justify-between text-sm text-muted-foreground mt-2">
-                  <span>${priceRange[0]}</span>
-                  <span>${priceRange[1]}{priceRange[1] === MAX_PRICE && '+'}</span>
+                  <span>{priceRange[0].toLocaleString()}</span>
+                  <span>{priceRange[1].toLocaleString()}{priceRange[1] === MAX_PRICE && '+'}</span>
                 </div>
               </div>
                <Button onClick={resetFilters} variant="secondary" className="w-full">

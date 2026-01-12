@@ -41,7 +41,7 @@ const formSchema = z.object({
   name: z.string().min(5, "Title must be at least 5 characters long."),
   location: z.string().min(3, "Location is required."),
   description: z.string().min(20, "Description must be at least 20 characters long."),
-  pricePerNight: z.coerce.number().min(10, "Price must be at least $10."),
+  pricePerNight: z.coerce.number().min(1000, "Price must be at least KES 1000."),
   category: z.enum(["Budget", "Mid-range", "Luxury"]),
   amenities: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one amenity.",
@@ -57,7 +57,7 @@ export default function PostListingPage() {
       name: "",
       location: "",
       description: "",
-      pricePerNight: 50,
+      pricePerNight: 5000,
       category: "Mid-range",
       amenities: [],
     },
@@ -98,7 +98,7 @@ export default function PostListingPage() {
                         <FormItem>
                         <FormLabel className="text-lg">Property Title</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., Serene Beachfront Cottage" {...field} />
+                            <Input placeholder="e.g., Serene Farm Stay with Mountain View" {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -113,7 +113,7 @@ export default function PostListingPage() {
                                 <FormItem>
                                 <FormLabel className="text-lg">Location</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="e.g., Diani Beach, Kwale" {...field} />
+                                    <Input placeholder="e.g., Nkubu, Meru" {...field} />
                                 </FormControl>
                                 <FormMessage />
                                 </FormItem>
@@ -124,7 +124,7 @@ export default function PostListingPage() {
                             name="pricePerNight"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel className="text-lg">Price per Night ($)</FormLabel>
+                                <FormLabel className="text-lg">Price per Night (KES)</FormLabel>
                                 <FormControl>
                                     <Input type="number" {...field} />
                                 </FormControl>

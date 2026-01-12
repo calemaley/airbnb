@@ -130,7 +130,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           <Card className="sticky top-24 shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl">
-                <span className="font-bold">${listing.pricePerNight}</span> / night
+                <span className="font-bold">KES {listing.pricePerNight.toLocaleString()}</span> / night
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">

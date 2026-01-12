@@ -46,9 +46,9 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
       // In a real app, you would check the payment status here.
       // We'll simulate a successful payment.
       const paymentSuccessful = true; 
-      const amountPaid = isFreeOfferAvailable ? 0 : 99;
+      const amountPaid = isFreeOfferAvailable ? 0 : 9900;
 
-      if (paymentSuccessful && (amountPaid === 99 || (isFreeOfferAvailable && amountPaid === 0))) {
+      if (paymentSuccessful && (amountPaid === 9900 || (isFreeOfferAvailable && amountPaid === 0))) {
         toast({
           title: "Registration Complete!",
           description: "Your listing is now active. Welcome to StaysKenya!",
@@ -144,7 +144,7 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
               ) : isFreeOfferAvailable ? (
                 'Complete Free Registration'
               ) : (
-                'Pay $99 and Activate'
+                'Pay KES 9,900 and Activate'
               )}
             </Button>
           </form>

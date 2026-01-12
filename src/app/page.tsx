@@ -31,16 +31,16 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white p-4">
           <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-            Find Airbnbs & Guest Rooms in Kenya
+            Find Airbnbs & Guest Rooms in Meru
           </h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-neutral-200">
-            Your adventure starts here. Discover unique places to stay, from serene beach houses to vibrant city apartments.
+            Your adventure starts here. Discover unique places to stay, from serene farm stays to vibrant town apartments.
           </p>
           <div className="mt-8 w-full max-w-2xl">
             <form className="flex flex-col sm:flex-row gap-2">
               <Input
                 type="text"
-                placeholder="Search by location, e.g., 'Nairobi', 'Diani'"
+                placeholder="Search by location, e.g., 'Meru Town', 'Imenti'"
                 className="h-14 text-lg"
               />
               <Button type="submit" size="lg" className="h-14 text-lg">

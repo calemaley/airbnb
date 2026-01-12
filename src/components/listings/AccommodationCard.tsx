@@ -40,7 +40,7 @@ export function AccommodationCard({ listing }: AccommodationCardProps) {
           </div>
           <div className="flex justify-between items-center mt-4">
             <div>
-              <span className="font-bold text-lg">${listing.pricePerNight}</span>
+              <span className="font-bold text-lg">KES {listing.pricePerNight.toLocaleString()}</span>
               <span className="text-sm text-muted-foreground">/night</span>
             </div>
             {listing.rating > 0 && <Rating rating={listing.rating} size={16} />}
