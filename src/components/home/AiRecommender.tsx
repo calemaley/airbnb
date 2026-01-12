@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Bot, Loader2, Sparkles } from 'lucide-react';
-import { useFlow } from '@genkit-ai/next/client';
 import {
   AccommodationPreferencesInput,
   recommendAccommodations,
@@ -15,19 +14,29 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 export default function AiRecommender() {
   const [preferences, setPreferences] = useState('');
   const [recommendations, setRecommendations] = useState('');
-  const { run: recommendAccommodationsFlow, data, error, loading } = useFlow(recommendAccommodations);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setRecommendations('');
-    const input: AccommodationPreferencesInput = {
-      preferences: preferences,
-      bookingHistory: 'User has previously booked a family-friendly villa in Diani and a business apartment in Nairobi.',
-      searchCriteria: 'Looking for a stay in the Maasai Mara for 2 adults for 3 nights in July.',
-    };
-    const result = await recommendAccommodationsFlow(input);
-    if (result?.recommendations) {
-      setRecommendations(result.recommendations);
+    setError(null);
+    setLoading(true);
+
+    try {
+      const input: AccommodationPreferencesInput = {
+        preferences: preferences,
+        bookingHistory: 'User has previously booked a family-friendly villa in Diani and a business apartment in Nairobi.',
+        searchCriteria: 'Looking for a stay in the Maasai Mara for 2 adults for 3 nights in July.',
+      };
+      const result = await recommendAccommodations(input);
+      if (result?.recommendations) {
+        setRecommendations(result.recommendations);
+      }
+    } catch (e: any) {
+      setError(e);
+    } finally {
+      setLoading(false);
     }
   };
 
