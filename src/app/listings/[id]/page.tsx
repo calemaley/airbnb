@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Rating } from '@/components/ui/rating';
@@ -20,12 +20,14 @@ import {
   Utensils,
   Tv,
   Wind,
-  Phone,
-  MessageCircle,
   MapPin,
-  Waves
+  Waves,
+  CalendarDays,
+  Users,
 } from 'lucide-react';
 import type { Amenity } from '@/lib/types';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const amenityIcons: Record<Amenity, React.ReactNode> = {
   wifi: <Wifi className="h-5 w-5 mr-2" />,
@@ -74,7 +76,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
         <CarouselContent>
           {listingImages.map((image, index) => image && (
             <CarouselItem key={index}>
-              <div className="relative h-96">
+              <div className="relative h-[500px]">
                 <Image src={image.imageUrl} alt={`${listing.name} - image ${index + 1}`} data-ai-hint={image.imageHint} fill className="object-cover" />
               </div>
             </CarouselItem>
@@ -130,17 +132,35 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           <Card className="sticky top-24 shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl">
-                <span className="font-bold">KES {listing.pricePerNight.toLocaleString()}</span> / night
+                <span className="font-bold">KES {listing.pricePerNight.toLocaleString()}</span>
+                <span className="text-base font-normal text-muted-foreground"> / night</span>
               </CardTitle>
+              <CardDescription>
+                <Rating rating={listing.rating} size={16}/>
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button size="lg" className="w-full text-lg h-12">Book Now</Button>
-               <p className="text-center text-muted-foreground text-sm">Contact host</p>
-               <div className="grid grid-cols-2 gap-2">
-                 <Button variant="outline"><Phone className="mr-2"/> Call</Button>
-                 <Button variant="outline"><MessageCircle className="mr-2"/> WhatsApp</Button>
-               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="check-in">Check-in</Label>
+                  <Input id="check-in" type="date" disabled placeholder="Check-in date" />
+                </div>
+                 <div className="space-y-2">
+                  <Label htmlFor="check-out">Check-out</Label>
+                  <Input id="check-out" type="date" disabled placeholder="Check-out date" />
+                </div>
+              </div>
+               <div className="space-y-2">
+                  <Label htmlFor="guests">Guests</Label>
+                  <Input id="guests" type="number" defaultValue={2} disabled min={1}/>
+                </div>
+                <p className="text-xs text-center text-muted-foreground pt-2">Booking functionality is not yet implemented.</p>
+
             </CardContent>
+            <CardFooter className="flex-col items-stretch space-y-2">
+                <Button size="lg" className="w-full text-lg h-12" disabled>Reserve</Button>
+                <p className="text-center text-sm text-muted-foreground">You won't be charged yet</p>
+            </CardFooter>
           </Card>
         </div>
       </div>

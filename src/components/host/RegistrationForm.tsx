@@ -39,7 +39,7 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
 
   function onSubmit(values: z.infer<typeof paymentSchema>) {
     setIsLoading(true);
-    console.log("Processing payment with:", values);
+    console.log("Processing payment to StaysKenya with:", values);
 
     // Simulate payment processing
     setTimeout(() => {
@@ -58,7 +58,7 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
         toast({
           variant: "destructive",
           title: "Payment Failed",
-          description: "There was an issue processing your payment. Please try again.",
+          description: "There was an issue processing your subscription payment. Please try again.",
         });
       }
       setIsLoading(false);
@@ -70,7 +70,7 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
       <CardHeader>
         <CardTitle className="font-headline text-3xl">Activate Your Listing</CardTitle>
         <CardDescription>
-          Complete the secure payment to get your property in front of thousands of potential guests.
+          Pay the annual subscription fee to StaysKenya to get your property in front of thousands of potential guests.
         </CardDescription>
       </CardHeader>
       <CardContent>
