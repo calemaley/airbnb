@@ -25,17 +25,14 @@ const signupSchema = z.object({
 })
 
 const standardFeatures = [
-    "1 Active Listing",
-    "Standard Search Placement",
-    "Email Support",
+    "Basic listing visibility",
+    "No featured placement",
 ];
 
 const premiumFeatures = [
-    "Up to 5 Active Listings",
-    "Priority Search Placement",
-    "Featured on Homepage",
-    "Premium Listing Badge",
-    "Phone & Email Support",
+    "Enhanced visibility",
+    "Featured placement",
+    "Premium listing badge",
 ];
 
 export default function SignupPage() {
