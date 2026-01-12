@@ -1,0 +1,28 @@
+export type Amenity = 'wifi' | 'pool' | 'parking' | 'kitchen' | 'ac' | 'tv';
+
+export type Category = 'Budget' | 'Mid-range' | 'Luxury';
+
+export interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+export interface Accommodation {
+  id: string;
+  name: string;
+  location: string;
+  category: Category;
+  pricePerNight: number;
+  description: string;
+  images: string[];
+  amenities: Amenity[];
+  rating: number;
+  reviews: Review[];
+  host: {
+    name: string;
+    avatar: string;
+  };
+}

@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "Scenic view of Kenyan savannah at sunset",
+      "imageUrl": "https://images.unsplash.com/photo-1678019032053-69ef34700798?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxrZW55YSUyMGxhbmRzY2FwZXxlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "kenya landscape"
+    },
+    {
+      "id": "listing-1",
+      "description": "Modern apartment living room",
+      "imageUrl": "https://images.unsplash.com/photo-1628592102751-ba83b0314276?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bW9kZXJuJTIwYXBhcnRtZW50fGVufDB8fHx8MTc2ODExODczMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern apartment"
+    },
+    {
+      "id": "listing-2",
+      "description": "Cozy beachfront cottage",
+      "imageUrl": "https://images.unsplash.com/photo-1567858156907-bc0d6be1fa4f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiZWFjaCUyMGNvdHRhZ2V8ZW58MHx8fHwxNzY4MjExNzc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beach cottage"
+    },
+    {
+      "id": "listing-3",
+      "description": "Luxury villa with a pool",
+      "imageUrl": "https://images.unsplash.com/photo-1717167398817-121e3c283dbb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsdXh1cnklMjB2aWxsYXxlbnwwfHx8fDE3NjgxNDg5NzN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury villa"
+    },
+    {
+      "id": "listing-4",
+      "description": "Rustic cabin in the woods",
+      "imageUrl": "https://images.unsplash.com/photo-1766886653730-95a89cced554?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxydXN0aWMlMjBjYWJpbnxlbnwwfHx8fDE3NjgxNzM1OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "rustic cabin"
+    },
+    {
+      "id": "listing-5",
+      "description": "Chic city studio",
+      "imageUrl": "https://images.unsplash.com/photo-1715540667755-5d2205bce475?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMHN0dWRpb3xlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city studio"
+    },
+    {
+      "id": "listing-6",
+      "description": "Spacious family home with a garden",
+      "imageUrl": "https://images.unsplash.com/photo-1601758003122-53c40e686a19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYW1pbHklMjBob21lfGVufDB8fHx8MTc2ODIxMTc3NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "family home"
+    },
+    {
+      "id": "listing-7",
+      "description": "Safari lodge with a view of the plains",
+      "imageUrl": "https://images.unsplash.com/photo-1694771170458-3487497fc7d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzYWZhcmklMjBsb2RnZXxlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "safari lodge"
+    },
+    {
+      "id": "listing-8",
+      "description": "Traditional Swahili house in Lamu",
+      "imageUrl": "https://images.unsplash.com/photo-1610019352323-e1e77fdd32a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzd2FoaWxpJTIwaG91c2V8ZW58MHx8fHwxNzY4MjExNzc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "swahili house"
+    }
+  ]
 }
