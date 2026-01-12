@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link"
@@ -10,7 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Check } from "lucide-react"
+import { Check, Loader2 } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { useState } from "react"
 
 const signupSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters."),
@@ -36,15 +39,45 @@ const premiumFeatures = [
 ];
 
 export default function SignupPage() {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: { name: "", email: "", password: "", plan: "standard" },
   })
 
-  function onSubmit(values: z.infer<typeof signupSchema>) {
-    // Firebase signup logic would go here, along with the selected plan
-    console.log(values)
-    alert("Signup functionality not implemented in this demo.")
+  async function onSubmit(values: z.infer<typeof signupSchema>) {
+    setIsLoading(true);
+
+    const price = values.plan === 'premium' ? 15000 : 10000;
+    console.log(`Simulating payment of KES ${price} for ${values.plan} plan...`);
+
+    // Simulate network delay for payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // In a real application, this is where you would integrate with Stripe/Pesapal
+    // and handle the response. For now, we'll assume it's always successful.
+    const paymentSuccessful = true;
+
+    if (paymentSuccessful) {
+        // In a real app, you would create the user account in your database (e.g., Firebase) here.
+        console.log("Payment successful. Creating user account:", values);
+        
+        toast({
+            title: "Registration Successful!",
+            description: `Welcome to StaysKenya! Your ${values.plan} account is now active.`,
+        });
+        form.reset(); // Reset form after successful signup
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Payment Failed",
+            description: "There was an issue processing your payment. Please try again or contact support.",
+        });
+    }
+
+    setIsLoading(false);
   }
 
   return (
@@ -152,8 +185,15 @@ export default function SignupPage() {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
-                Create Account & Proceed to Payment
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                    </>
+                ) : (
+                   "Create Account & Proceed to Payment"
+                )}
               </Button>
             </form>
           </Form>
