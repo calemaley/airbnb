@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bot, Loader2, Sparkles } from 'lucide-react';
+import { Bot, Loader2, Sparkles, AlertTriangle } from 'lucide-react';
 import {
   AccommodationPreferencesInput,
   recommendAccommodations,
@@ -11,6 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+const isMissingApiKeyError = (error: any) => {
+  return error instanceof Error && error.message.includes('GEMINI_API_KEY');
+}
 
 export default function AiRecommender() {
   const [preferences, setPreferences] = useState('');
@@ -56,6 +60,24 @@ export default function AiRecommender() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {isMissingApiKeyError(error) ? (
+             <Alert variant="destructive" className="mb-6">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>AI Assistant is not configured</AlertTitle>
+                <AlertDescription>
+                    To enable the AI-powered assistant, you need to add your Google AI API key.
+                    <ol className="list-decimal list-inside mt-2 space-y-1">
+                        <li>Obtain a free API key from <a href="https://aistudio.google.com/keys" target="_blank" rel="noopener noreferrer" className="underline font-semibold">Google AI Studio</a>.</li>
+                        <li>Create a file named <code className="bg-destructive-foreground/20 px-1 py-0.5 rounded-sm text-white">.env</code> in the root of your project.</li>
+                        <li>Add the following line to the <code className="bg-destructive-foreground/20 px-1 py-0.5 rounded-sm text-white">.env</code> file:
+                            <pre className="mt-1 bg-destructive-foreground/20 p-2 rounded-md text-white overflow-x-auto">GEMINI_API_KEY=YOUR_API_KEY_HERE</pre>
+                        </li>
+                        <li>Replace <code className="bg-destructive-foreground/20 px-1 py-0.5 rounded-sm text-white">YOUR_API_KEY_HERE</code> with your actual key and restart the development server.</li>
+                    </ol>
+                </AlertDescription>
+            </Alert>
+          ) : null }
+
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
             <div className="flex flex-col gap-4">
               <p className="font-medium">Ask a question</p>
@@ -91,7 +113,7 @@ export default function AiRecommender() {
                         <p className="mt-4 font-medium text-muted-foreground">Our AI is thinking...</p>
                     </div>
                 )}
-                {error && (
+                {error && !isMissingApiKeyError(error) && (
                     <Alert variant="destructive">
                         <AlertTitle>An Error Occurred</AlertTitle>
                         <AlertDescription>{error.message}</AlertDescription>
