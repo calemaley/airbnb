@@ -9,9 +9,9 @@ import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/listings', label: 'Listings' },
+  { href: '/listings', label: 'Explore Listings' },
   { href: '/register-host', label: 'Become a Host' },
-  { href: '/about', label: 'About' },
+  { href: '/about', label: 'About StaysKenya' },
 ];
 
 export default function Header() {

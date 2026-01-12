@@ -19,8 +19,8 @@ export default function Footer() {
           <div>
             <h3 className="font-bold mb-4 font-headline text-lg">Company</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:underline">About Us</Link></li>
-              <li><Link href="/listings" className="hover:underline">Listings</Link></li>
+              <li><Link href="/about" className="hover:underline">About StaysKenya</Link></li>
+              <li><Link href="/listings" className="hover:underline">Explore Listings</Link></li>
               <li><Link href="/post-listing" className="hover:underline">Become a Host</Link></li>
             </ul>
           </div>
@@ -43,7 +43,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t border-primary/20 pt-8 text-center text-sm space-y-4">
           <p className='max-w-2xl mx-auto'>
-            <strong>Disclaimer:</strong> Booking and payment are a private matter between the guest and the host. StaysKenya is solely an advertising platform.
+            <strong>Disclaimer:</strong> StaysKenya is solely an advertising platform. Booking and payment are a private matter between the guest and the host.
           </p>
           <p>&copy; {new Date().getFullYear()} StaysKenya. All rights reserved.</p>
         </div>
