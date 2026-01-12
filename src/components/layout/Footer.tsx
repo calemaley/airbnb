@@ -21,7 +21,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/about" className="hover:underline">About StaysKenya</Link></li>
               <li><Link href="/listings" className="hover:underline">Explore Listings</Link></li>
-              <li><Link href="/post-listing" className="hover:underline">Become a Host</Link></li>
+              <li><Link href="/become-a-host" className="hover:underline">Become a Host</Link></li>
             </ul>
           </div>
           <div>

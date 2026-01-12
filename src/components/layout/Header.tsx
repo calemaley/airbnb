@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/listings', label: 'Explore Listings' },
-  { href: '/register-host', label: 'Become a Host' },
+  { href: '/become-a-host', label: 'Become a Host' },
   { href: '/about', label: 'About StaysKenya' },
 ];
 
