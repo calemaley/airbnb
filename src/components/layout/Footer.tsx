@@ -43,7 +43,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t border-primary/20 pt-8 text-center text-sm space-y-4">
           <p className='max-w-2xl mx-auto'>
-            <strong>Disclaimer:</strong> StaysKenya is an advertising platform. Booking and payment are made directly with the host.
+            <strong>Disclaimer:</strong> Booking and payment are a private matter between the guest and the host. StaysKenya is solely an advertising platform.
           </p>
           <p>&copy; {new Date().getFullYear()} StaysKenya. All rights reserved.</p>
         </div>
