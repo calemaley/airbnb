@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Rating } from '@/components/ui/rating';
+import { PremiumBadge } from '@/components/ui/premium-badge';
 import {
   Carousel,
   CarouselContent,
@@ -67,6 +68,12 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
              <MapPin className="h-5 w-5 mr-1" />
              <span>{listing.location}</span>
           </div>
+          {listing.category === 'Luxury' && (
+            <>
+                <span className="text-muted-foreground">•</span>
+                <PremiumBadge />
+            </>
+          )}
         </div>
       </div>
       

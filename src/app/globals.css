@@ -29,6 +29,8 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --premium-gold-border: 45 35% 70%;
+    --premium-gold-bg: 45 35% 95%;
   }
  
   .dark {
@@ -51,6 +53,8 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 88 22% 64%;
+    --premium-gold-border: 45 35% 40%;
+    --premium-gold-bg: 45 35% 15%;
   }
 }
  
