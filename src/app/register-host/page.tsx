@@ -2,10 +2,26 @@
 import { CheckCircle } from 'lucide-react';
 import RegistrationForm from '@/components/host/RegistrationForm';
 import { getActiveHostCount } from '@/lib/host-data';
+import { PricingCard } from '@/components/host/PricingCard';
 
 export default function RegisterHostPage() {
   const activeHosts = getActiveHostCount();
   const isFreeOfferAvailable = activeHosts < 5;
+
+  const standardFeatures = [
+      "1 Active Listing",
+      "Standard Search Placement",
+      "Email Support",
+      "Direct Guest Communication"
+  ];
+
+  const premiumFeatures = [
+      "Up to 5 Active Listings",
+      "Priority Search Placement",
+      "Featured on Homepage",
+      "Phone & Email Support",
+      "Direct Guest Communication"
+  ];
 
   return (
     <div className="bg-secondary">
@@ -19,36 +35,24 @@ export default function RegisterHostPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 mt-16 items-start">
-          <div className="bg-card p-8 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-headline font-bold mb-6">Why Host With Us?</h2>
-            <ul className="space-y-4 text-lg">
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
-                <span><span className="font-bold">Local Focus:</span> We are a platform dedicated entirely to the Meru market.</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
-                <span><span className="font-bold">Simple Pricing:</span> No hidden fees. Just a straightforward annual subscription.</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
-                <span><span className="font-bold">Automated Activation:</span> Your listing goes live the moment your payment is confirmed.</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
-                <span><span className="font-bold">Secure Payments:</span> We partner with industry-leading payment providers for your security.</span>
-              </li>
-            </ul>
-            <div className="mt-8 bg-secondary border border-primary/20 p-6 rounded-lg">
-              <h3 className="font-headline text-xl font-semibold text-primary">Simple Annual Pricing</h3>
-              <p className="text-5xl font-bold mt-2">KES 9,900 <span className="text-lg font-normal text-muted-foreground">/ year</span></p>
-              <p className="mt-2 text-muted-foreground">This flat fee covers your listing's activation for one year. No commissions, no surprises.</p>
-            </div>
-          </div>
-          
-          <RegistrationForm isFreeOfferAvailable={isFreeOfferAvailable} activeHostCount={activeHosts} />
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+            <PricingCard 
+                plan="Standard"
+                price={10000}
+                features={standardFeatures}
+                isFreeOfferAvailable={isFreeOfferAvailable}
+                activeHostCount={activeHosts}
+            />
+             <PricingCard 
+                plan="Premium"
+                price={15000}
+                features={premiumFeatures}
+                isPopular
+            />
+        </div>
 
+        <div className="max-w-4xl mx-auto mt-16">
+           <RegistrationForm isFreeOfferAvailable={isFreeOfferAvailable} activeHostCount={activeHosts} />
         </div>
       </div>
     </div>

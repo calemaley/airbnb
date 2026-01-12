@@ -12,11 +12,12 @@ import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CreditCard, Gift, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 
 const paymentSchema = z.object({
   fullName: z.string().min(3, "Full name is required."),
   email: z.string().email("Invalid email address."),
-  paymentMethod: z.enum(['stripe', 'paypal', 'pesapal']),
+  plan: z.enum(['standard', 'premium']),
 });
 
 interface RegistrationFormProps {
@@ -33,9 +34,12 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
     defaultValues: {
       fullName: "",
       email: "",
-      paymentMethod: 'stripe',
+      plan: 'standard',
     },
   });
+
+  const selectedPlan = form.watch('plan');
+  const price = selectedPlan === 'premium' ? 15000 : 10000;
 
   function onSubmit(values: z.infer<typeof paymentSchema>) {
     setIsLoading(true);
@@ -46,12 +50,13 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
       // In a real app, you would check the payment status here.
       // We'll simulate a successful payment.
       const paymentSuccessful = true; 
-      const amountPaid = isFreeOfferAvailable ? 0 : 9900;
+      const isFree = isFreeOfferAvailable && values.plan === 'standard';
+      const amountPaid = isFree ? 0 : price;
 
-      if (paymentSuccessful && (amountPaid === 9900 || (isFreeOfferAvailable && amountPaid === 0))) {
+      if (paymentSuccessful) {
         toast({
           title: "Registration Complete!",
-          description: "Your listing is now active. Welcome to StaysKenya!",
+          description: `Your ${values.plan} listing is now active. Welcome to StaysKenya!`,
         });
         form.reset();
       } else {
@@ -70,55 +75,90 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
       <CardHeader>
         <CardTitle className="font-headline text-3xl">Activate Your Listing</CardTitle>
         <CardDescription>
-          Pay the annual subscription fee to StaysKenya to get your property in front of thousands of potential guests.
+          Choose your plan and pay the annual subscription fee to get your property in front of thousands of potential guests.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isFreeOfferAvailable ? (
+        {isFreeOfferAvailable && (
           <Alert className="mb-6 bg-green-50 border-green-200 text-green-800">
             <Gift className="h-5 w-5 text-green-600" />
             <AlertTitle className="font-bold">You're in luck!</AlertTitle>
             <AlertDescription>
-              You are one of the first {5 - activeHostCount} hosts! Your first year of listing is completely free. Complete your registration to claim your spot.
-            </AlertDescription>
-          </Alert>
-        ) : (
-          <Alert className="mb-6">
-            <AlertTitle>Free Offer Ended</AlertTitle>
-            <AlertDescription>
-              The free listing incentive for the first five hosts has now ended.
+              You are one of the first {5 - activeHostCount} hosts! Your first year of the Standard Plan is completely free.
             </AlertDescription>
           </Alert>
         )}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            
             <FormField
               control={form.control}
-              name="fullName"
+              name="plan"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-lg">Select Your Plan</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <div className="p-4 border rounded-lg has-[:checked]:border-primary flex-1">
+                            <RadioGroupItem value="standard" id="standard" className="sr-only"/>
+                            <FormLabel htmlFor="standard" className="font-bold text-base cursor-pointer">
+                              Standard Plan <span className="font-normal text-muted-foreground">KES 10,000/year</span>
+                            </FormLabel>
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                           <div className="p-4 border rounded-lg has-[:checked]:border-primary flex-1">
+                            <RadioGroupItem value="premium" id="premium" className="sr-only"/>
+                            <FormLabel htmlFor="premium" className="font-bold text-base cursor-pointer">
+                                Premium Plan <span className="font-normal text-muted-foreground">KES 15,000/year</span>
+                            </FormLabel>
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="you@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            <div className="grid md:grid-cols-2 gap-6">
+                <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                        <Input placeholder="you@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            </div>
             
             <div>
               <FormLabel>Payment Provider</FormLabel>
@@ -141,10 +181,10 @@ export default function RegistrationForm({ isFreeOfferAvailable, activeHostCount
             <Button type="submit" size="lg" className="w-full text-lg h-12" disabled={isLoading}>
               {isLoading ? (
                 <Loader2 className="animate-spin" />
-              ) : isFreeOfferAvailable ? (
+              ) : isFreeOfferAvailable && selectedPlan === 'standard' ? (
                 'Complete Free Registration'
               ) : (
-                'Pay KES 9,900 and Activate'
+                `Pay KES ${price.toLocaleString()} and Activate`
               )}
             </Button>
           </form>
