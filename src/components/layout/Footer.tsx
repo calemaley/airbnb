@@ -27,9 +27,9 @@ export default function Footer() {
           <div>
             <h3 className="font-bold mb-4 font-headline text-lg">Support</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="hover:underline">Help Center</Link></li>
-              <li><Link href="#" className="hover:underline">Contact Us</Link></li>
-              <li><Link href="#" className="hover:underline">Trust & Safety</Link></li>
+              <li><Link href="/help-center" className="hover:underline">Help Center</Link></li>
+              <li><Link href="/contact" className="hover:underline">Contact Us</Link></li>
+              <li><Link href="/trust-and-safety" className="hover:underline">Trust & Safety</Link></li>
             </ul>
           </div>
           <div>
