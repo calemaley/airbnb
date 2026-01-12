@@ -37,7 +37,7 @@ export default function Home() {
           className="w-full"
         >
           <CarouselContent>
-            {carouselImages.map((image) => (
+            {carouselImages.map((image, index) => (
               <CarouselItem key={image.id}>
                 <div className="relative h-[60vh] md:h-[70vh]">
                   <Image
@@ -46,7 +46,7 @@ export default function Home() {
                     data-ai-hint={image.imageHint}
                     fill
                     className="object-cover"
-                    priority={carouselImages.indexOf(image) === 0}
+                    priority={index === 0}
                   />
                 </div>
               </CarouselItem>
