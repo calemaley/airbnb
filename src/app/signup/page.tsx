@@ -11,9 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Check, Loader2 } from "lucide-react"
+import { Check, Gift, Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
+import { activateNewHost, getActiveHostCount } from "@/lib/host-data"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 const signupSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters."),
@@ -25,15 +27,26 @@ const signupSchema = z.object({
 })
 
 const standardFeatures = [
-    "Basic listing visibility",
-    "No featured placement",
+    "1 Active Listing",
+    "Standard Search Placement",
+    "Email Support",
+    "Direct Guest Communication"
 ];
 
 const premiumFeatures = [
-    "Enhanced visibility",
-    "Featured placement",
-    "Premium listing badge",
+    "Up to 5 Active Listings",
+    "Priority Search Placement",
+    "Featured on Homepage",
+    "Phone & Email Support",
+    "Direct Guest Communication",
+    "Premium Listing Badge"
 ];
+
+
+// In a real app, this data would likely come from an API route or server component props
+// For this demo, we call the server-side function directly (Next.js allows this in client components)
+const activeHostCount = getActiveHostCount();
+const isFreeOfferAvailable = activeHostCount < 5;
 
 export default function SignupPage() {
   const { toast } = useToast();
@@ -44,11 +57,16 @@ export default function SignupPage() {
     defaultValues: { name: "", email: "", password: "", plan: "standard" },
   })
 
+  const selectedPlan = form.watch('plan');
+  const isFreeStandardPlan = isFreeOfferAvailable && selectedPlan === 'standard';
+
   async function onSubmit(values: z.infer<typeof signupSchema>) {
     setIsLoading(true);
 
     const price = values.plan === 'premium' ? 15000 : 10000;
-    console.log(`Simulating payment of KES ${price} for ${values.plan} plan...`);
+    const finalPrice = isFreeStandardPlan ? 0 : price;
+
+    console.log(`Simulating payment of KES ${finalPrice} for ${values.plan} plan...`);
 
     // Simulate network delay for payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -61,11 +79,14 @@ export default function SignupPage() {
         // In a real app, you would create the user account in your database (e.g., Firebase) here.
         console.log("Payment successful. Creating user account:", values);
         
+        // This is a simulation. In a real app, this would be a transactional database operation.
+        activateNewHost();
+
         toast({
             title: "Registration Successful!",
             description: `Welcome to StaysKenya! Your ${values.plan} account is now active.`,
         });
-        form.reset(); // Reset form after successful signup
+        form.reset();
     } else {
         toast({
             variant: "destructive",
@@ -87,6 +108,15 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {isFreeOfferAvailable && (
+            <Alert className="mb-6 bg-green-50 border-green-200 text-green-800">
+                <Gift className="h-5 w-5 text-green-600" />
+                <AlertTitle className="font-bold">You're in luck!</AlertTitle>
+                <AlertDescription>
+                You are eligible for a free first year on the Standard Plan as one of our first {5} hosts! Only {5 - activeHostCount} free spots remain.
+                </AlertDescription>
+            </Alert>
+          )}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
@@ -107,7 +137,14 @@ export default function SignupPage() {
                           </FormControl>
                           <FormLabel htmlFor="standard" className="flex flex-col p-4 border rounded-lg cursor-pointer hover:border-primary has-[:checked]:border-primary has-[:checked]:border-2 has-[:checked]:shadow-md h-full">
                             <span className="font-bold text-lg">Standard Host</span>
-                            <span className="text-xl font-bold mt-2">KES 10,000 <span className="text-sm font-normal text-muted-foreground">/ year</span></span>
+                            {isFreeOfferAvailable ? (
+                                <>
+                                    <span className="text-xl font-bold mt-2 text-green-600">FREE <span className="text-sm font-normal text-muted-foreground line-through">KES 10,000</span></span>
+                                    <span className="text-sm font-normal text-green-700">First Year Free</span>
+                                </>
+                            ) : (
+                                <span className="text-xl font-bold mt-2">KES 10,000 <span className="text-sm font-normal text-muted-foreground">/ year</span></span>
+                            )}
                             <ul className="space-y-2 mt-4 text-sm flex-1">
                                 {standardFeatures.map(feat => (
                                     <li key={feat} className="flex items-center gap-2">
@@ -189,7 +226,7 @@ export default function SignupPage() {
                         Processing...
                     </>
                 ) : (
-                   "Create Account & Proceed to Payment"
+                    isFreeStandardPlan ? "Complete Free Registration" : `Create Account & Proceed to Payment`
                 )}
               </Button>
             </form>
