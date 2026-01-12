@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/listings', label: 'Listings' },
-  { href: '/post-listing', label: 'Post Your Airbnb' },
+  { href: '/register-host', label: 'Become a Host' },
   { href: '/about', label: 'About' },
 ];
 
