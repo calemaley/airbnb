@@ -19,33 +19,36 @@ export default function Home() {
       <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white">
         <HeroCarousel />
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 container px-4 -mt-16">
-            <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 md:p-8 shadow-2xl border">
-                 <div className=" text-center">
-                    <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-primary">
-                        Find Airbnbs & Guest Rooms in Meru
-                    </h1>
-                    <p className="mt-2 max-w-2xl mx-auto text-lg md:text-xl text-foreground/80">
-                        Starting with Meru, expanding across Kenya.
-                    </p>
-                    <div className="mt-6 w-full max-w-2xl mx-auto">
-                        <form className="flex flex-col sm:flex-row gap-2">
-                        <Input
-                            type="text"
-                            placeholder="Search by location, e.g., 'Meru Town', 'Imenti'"
-                            className="h-14 text-lg"
-                        />
-                        <Button type="submit" size="lg" className="h-14 text-lg">
-                            <Search className="mr-2 h-5 w-5" />
-                            Search
-                        </Button>
-                        </form>
-                        <p className="text-sm mt-2 text-muted-foreground">More counties coming soon.</p>
-                    </div>
+        <div className="relative z-10 container px-4">
+            <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-white drop-shadow-2xl">
+                Find Airbnbs & Guest Rooms in Meru
+            </h1>
+            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-white/90 drop-shadow-lg">
+                Starting with Meru, expanding across Kenya.
+            </p>
+        </div>
+      </section>
+
+      <div className="container px-4 -mt-40 z-20 relative">
+        <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 md:p-8 shadow-2xl border">
+              <div className=" text-center">
+                <div className="w-full max-w-2xl mx-auto">
+                    <form className="flex flex-col sm:flex-row gap-2">
+                    <Input
+                        type="text"
+                        placeholder="Search by location, e.g., 'Meru Town', 'Imenti'"
+                        className="h-14 text-lg"
+                    />
+                    <Button type="submit" size="lg" className="h-14 text-lg">
+                        <Search className="mr-2 h-5 w-5" />
+                        Search
+                    </Button>
+                    </form>
+                    <p className="text-sm mt-2 text-muted-foreground">More counties coming soon.</p>
                 </div>
             </div>
         </div>
-      </section>
+      </div>
 
 
       <section className="container mx-auto px-4 -mt-8">
@@ -70,4 +73,3 @@ export default function Home() {
     </div>
   );
 }
-
