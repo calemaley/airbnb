@@ -11,16 +11,11 @@ import { AccommodationCard } from '@/components/listings/AccommodationCard';
 import { getFeaturedListings } from '@/lib/data';
 import AiRecommender from '@/components/home/AiRecommender';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay"
 
 export default function Home() {
   const featuredListings = getFeaturedListings();
-  const carouselImages = PlaceHolderImages.filter(p => ['listing-2', 'listing-3', 'listing-6', 'listing-7'].includes(p.id))
+  const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-1');
   
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
@@ -29,30 +24,16 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-16 md:gap-24">
       <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white">
-         <Carousel
-          plugins={[plugin.current]}
-          opts={{
-            loop: true,
-          }}
-          className="absolute inset-0 w-full h-full"
-        >
-          <CarouselContent className="h-full">
-            {carouselImages.map((image, index) => (
-              <CarouselItem key={image.id} className="h-full">
-                <div className="relative h-full w-full">
-                  <Image
-                    src={image.imageUrl}
-                    alt={image.description}
-                    data-ai-hint={image.imageHint}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        {heroImage && (
+          <Image
+            src={heroImage.imageUrl}
+            alt={heroImage.description}
+            data-ai-hint={heroImage.imageHint}
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 container px-4 -mt-16">
             <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 md:p-8 shadow-2xl border">
