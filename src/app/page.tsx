@@ -1,6 +1,7 @@
 
 'use client'
 
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Search } from 'lucide-react';
@@ -19,18 +20,17 @@ import Autoplay from "embla-carousel-autoplay"
 
 export default function Home() {
   const featuredListings = getFeaturedListings();
-  const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-1');
   const carouselImages = PlaceHolderImages.filter(p => ['listing-2', 'listing-3', 'listing-6', 'listing-7'].includes(p.id))
+  
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: false })
+  )
 
   return (
     <div className="flex flex-col gap-16 md:gap-24">
       <section className="w-full">
          <Carousel
-          plugins={[
-            Autoplay({
-              delay: 5000,
-            }),
-          ]}
+          plugins={[plugin.current]}
           opts={{
             loop: true,
           }}
