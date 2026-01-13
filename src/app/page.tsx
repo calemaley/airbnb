@@ -2,7 +2,6 @@
 'use client'
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,30 +9,15 @@ import { Input } from '@/components/ui/input';
 import { AccommodationCard } from '@/components/listings/AccommodationCard';
 import { getFeaturedListings } from '@/lib/data';
 import AiRecommender from '@/components/home/AiRecommender';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import Autoplay from "embla-carousel-autoplay"
+import HeroCarousel from '@/components/home/HeroCarousel';
 
 export default function Home() {
   const featuredListings = getFeaturedListings();
-  const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-1');
   
-  const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
-  )
-
   return (
     <div className="flex flex-col gap-16 md:gap-24">
       <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt={heroImage.description}
-            data-ai-hint={heroImage.imageHint}
-            fill
-            className="object-cover"
-            priority
-          />
-        )}
+        <HeroCarousel />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 container px-4 -mt-16">
             <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 md:p-8 shadow-2xl border">
