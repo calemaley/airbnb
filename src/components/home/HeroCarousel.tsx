@@ -4,6 +4,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { getFeaturedListings } from '@/lib/data';
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
@@ -11,7 +12,9 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 
-const carouselImages = PlaceHolderImages.filter(p => ['hero-1', 'hero-2', 'hero-3', 'hero-4'].includes(p.id));
+const featuredListings = getFeaturedListings();
+const featuredImageIds = featuredListings.map(listing => listing.images[0]);
+const carouselImages = PlaceHolderImages.filter(p => featuredImageIds.includes(p.id));
 
 export default function HeroCarousel() {
   const plugin = React.useRef(
@@ -34,7 +37,7 @@ export default function HeroCarousel() {
                 data-ai-hint={image.imageHint}
                 fill
                 className="object-cover"
-                priority={image.id === 'hero-1'}
+                priority={image.id === 'listing-2'}
               />
             </div>
           </CarouselItem>
@@ -43,4 +46,3 @@ export default function HeroCarousel() {
     </Carousel>
   );
 }
-
