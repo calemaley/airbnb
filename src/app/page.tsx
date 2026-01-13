@@ -23,23 +23,23 @@ export default function Home() {
   const carouselImages = PlaceHolderImages.filter(p => ['listing-2', 'listing-3', 'listing-6', 'listing-7'].includes(p.id))
   
   const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: false })
+    Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
   )
 
   return (
     <div className="flex flex-col gap-16 md:gap-24">
-      <section className="w-full">
+      <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white">
          <Carousel
           plugins={[plugin.current]}
           opts={{
             loop: true,
           }}
-          className="w-full"
+          className="absolute inset-0 w-full h-full"
         >
-          <CarouselContent>
+          <CarouselContent className="h-full">
             {carouselImages.map((image, index) => (
-              <CarouselItem key={image.id}>
-                <div className="relative h-[60vh] md:h-[70vh]">
+              <CarouselItem key={image.id} className="h-full">
+                <div className="relative h-full w-full">
                   <Image
                     src={image.imageUrl}
                     alt={image.description}
@@ -53,10 +53,8 @@ export default function Home() {
             ))}
           </CarouselContent>
         </Carousel>
-      </section>
-
-      <section className="relative -mt-48 md:-mt-64 z-10">
-        <div className="container mx-auto px-4">
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 container px-4 -mt-16">
             <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 md:p-8 shadow-2xl border">
                  <div className=" text-center">
                     <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-primary">
