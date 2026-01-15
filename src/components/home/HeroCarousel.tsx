@@ -12,14 +12,14 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 
-const premiumListings = getAllListings().filter(listing => listing.category === 'Luxury');
-const premiumImageIds = premiumListings.map(listing => listing.images[0]);
-const carouselImages = PlaceHolderImages.filter(p => premiumImageIds.includes(p.id));
-
 export default function HeroCarousel() {
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
   );
+
+  const premiumListings = getAllListings().filter(listing => listing.category === 'Luxury');
+  const premiumImageIds = premiumListings.map(listing => listing.images[0]);
+  const carouselImages = PlaceHolderImages.filter(p => premiumImageIds.includes(p.id));
 
   return (
     <Carousel
