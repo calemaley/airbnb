@@ -1,16 +1,12 @@
-
-
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Check, ArrowRight, Gift } from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { getActiveHostCount } from '@/lib/host-data';
 
 const standardFeatures = [
     "1 Active Listing (per property)",
     "Standard Search Placement",
-    "Email Support",
+    "Phone & Email Support",
     "Direct Guest Communication"
 ];
 
@@ -18,7 +14,7 @@ const premiumFeatures = [
     "1 Active Listing (per property)",
     "Priority Search Placement",
     "Featured on Homepage",
-    "Phone & Email Support",
+    "Priority Phone & Email Support",
     "Direct Guest Communication",
     "Premium Listing Badge",
     "Enhanced Marketing Visibility",
@@ -26,9 +22,6 @@ const premiumFeatures = [
 ];
 
 export default function BecomeAHostPage() {
-    const activeHostCount = getActiveHostCount();
-    const isFreeOfferAvailable = activeHostCount < 5;
-
   return (
     <div className="bg-secondary">
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -41,18 +34,7 @@ export default function BecomeAHostPage() {
           </p>
         </div>
 
-        {isFreeOfferAvailable && (
-          <Alert className="max-w-4xl mx-auto mt-8 bg-green-50 border-green-200 text-green-800">
-            <Gift className="h-5 w-5 text-green-600" />
-            <AlertTitle className="font-bold">Limited-Time Offer!</AlertTitle>
-            <AlertDescription>
-                Be one of our first 5 hosts and receive your first year on the Standard Plan for free! 
-                Only {5 - activeHostCount} spots remaining. <Link href="/signup" className='font-bold underline'>Sign up now.</Link>
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
           {/* Standard Host Card */}
           <Card className="flex flex-col">
             <CardHeader>

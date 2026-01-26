@@ -29,7 +29,7 @@ const signupSchema = z.object({
 const standardFeatures = [
     "1 Active Listing (per property)",
     "Standard Search Placement",
-    "Email Support",
+    "Phone & Email Support",
     "Direct Guest Communication"
 ];
 
@@ -37,7 +37,7 @@ const premiumFeatures = [
     "1 Active Listing (per property)",
     "Priority Search Placement",
     "Featured on Homepage",
-    "Phone & Email Support",
+    "Priority Phone & Email Support",
     "Direct Guest Communication",
     "Premium Listing Badge",
     "Enhanced Marketing Visibility",
