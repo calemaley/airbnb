@@ -1,4 +1,5 @@
 
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Check, ArrowRight } from 'lucide-react';
@@ -7,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 const standardFeatures = [
     "1 Active Listing (per property)",
     "Standard Search Placement",
-    "Phone & Email Support",
+    "Email Support",
     "Direct Guest Communication"
 ];
 
@@ -16,7 +17,10 @@ const premiumFeatures = [
     "Priority Search Placement",
     "Featured on Homepage",
     "Phone & Email Support",
-    "Direct Guest Communication"
+    "Direct Guest Communication",
+    "Premium Listing Badge",
+    "Enhanced Marketing Visibility",
+    "Priority Review & Approval"
 ];
 
 export default function BecomeAHostPage() {
@@ -28,7 +32,7 @@ export default function BecomeAHostPage() {
             Showcase Your Property on StaysKenya
           </h1>
           <p className="mt-6 text-lg text-foreground/80 max-w-3xl mx-auto">
-            Join a curated collection of Meru’s finest accommodations. We offer a tier-based platform designed to give your property the visibility it deserves, connecting you with guests seeking quality and authenticity.
+            Join a curated collection of Meru’s finest accommodations. We’re not just another listing site — we’re your marketing partner. We offer a tier-based platform designed to give your property the visibility it deserves, connecting you with guests seeking quality and authenticity.
           </p>
         </div>
 
