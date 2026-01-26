@@ -18,7 +18,7 @@ const standardFeatures = [
 ];
 
 const premiumFeatures = [
-    "Up to 5 Active Listings",
+    "1 Active Listing (per property)",
     "Priority Search Placement",
     "Featured on Homepage",
     "Phone & Email Support",
