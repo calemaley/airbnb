@@ -10,17 +10,19 @@ import { Badge } from '@/components/ui/badge';
 const standardFeatures = [
     "1 Active Listing (per property)",
     "Standard Search Placement",
-    "Email Support",
+    "Phone & Email Support",
     "Direct Guest Communication"
 ];
 
 const premiumFeatures = [
-    "Up to 5 Active Listings",
+    "1 Active Listing (per property)",
     "Priority Search Placement",
     "Featured on Homepage",
-    "Phone & Email Support",
+    "Priority Phone & Email Support",
     "Direct Guest Communication",
     "Premium Listing Badge",
+    "Enhanced Marketing Visibility",
+    "Priority Review & Approval"
 ];
 
 export default function BecomeAHostPage() {
@@ -114,9 +116,6 @@ export default function BecomeAHostPage() {
                                 <span><strong>Get a Promo Video Clip</strong> for social media (Premium listings only).</span>
                             </li>
                         </ul>
-                        <Button asChild>
-                            <Link href="/signup">Become a Marketing Partner</Link>
-                        </Button>
                         <p className="text-xs text-muted-foreground mt-3">
                             Each property requires an individual paid plan.
                         </p>
