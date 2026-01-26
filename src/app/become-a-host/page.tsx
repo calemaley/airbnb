@@ -1,10 +1,12 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Check, ArrowRight, Gift } from 'lucide-react';
+import { Check, ArrowRight, Gift, Airplay } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { getActiveHostCount } from '@/lib/host-data';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 
 const standardFeatures = [
     "1 Active Listing",
@@ -104,6 +106,61 @@ export default function BecomeAHostPage() {
           </Card>
         </div>
         
+        <div className="max-w-4xl mx-auto mt-16">
+            <Card className="relative overflow-hidden border-2 border-primary/20 bg-card shadow-lg">
+                <Badge className="absolute top-4 right-4" variant="outline">Marketing Bonus</Badge>
+                <CardHeader>
+                    <CardTitle className="font-headline text-3xl">We’re not just another listing site — we’re your marketing partner.</CardTitle>
+                    <CardDescription className="text-lg pt-2">
+                        Supercharge your listing's appeal with our exclusive marketing bonus for new partners.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid md:grid-cols-5 gap-8 items-center">
+                        <div className="md:col-span-3">
+                            <h4 className="font-bold text-xl mb-4 flex items-center">
+                                <Airplay className="h-6 w-6 mr-3 text-primary" />
+                                Complimentary Professional Drone Shoot
+                            </h4>
+                            <p className="text-muted-foreground mb-4">
+                                Hosts who list two paid properties receive one complimentary professional drone shoot for one selected property. Each property is listed and paid for individually.
+                            </p>
+                            <ul className="space-y-3">
+                                <li className="flex items-start">
+                                    <Check className="h-5 w-5 text-primary mr-3 mt-1 flex-shrink-0" />
+                                    <span><strong>Attract More Guests:</strong> High-quality aerial photography makes your property stand out.</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <Check className="h-5 w-5 text-primary mr-3 mt-1 flex-shrink-0" />
+                                    <span><strong>Enhance Premium Listings:</strong> Drone shoot includes high-quality aerial photography and (Premium listings only) a short promotional video clip.</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <Check className="h-5 w-5 text-primary mr-3 mt-1 flex-shrink-0" />
+                                    <span><strong>Boost Your Marketing:</strong> Use professional assets to maximize your booking potential.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="md:col-span-2 relative h-56 w-full rounded-lg overflow-hidden">
+                            <Image
+                                src="https://images.unsplash.com/photo-1507582020474-3a47995a1927?q=80&w=800&auto=format&fit=crop"
+                                alt="Drone photography of a coastal property"
+                                data-ai-hint="drone photography"
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                    </div>
+                </CardContent>
+                <CardFooter>
+                    <Button asChild size="lg">
+                        <Link href="/signup">
+                            Become a Marketing Partner
+                        </Link>
+                    </Button>
+                </CardFooter>
+            </Card>
+        </div>
+
         <div className="text-center mt-16">
             <p className="text-muted-foreground">Have an account? <Link href="/login" className="text-primary font-medium hover:underline">Log in to manage your listings.</Link></p>
         </div>
