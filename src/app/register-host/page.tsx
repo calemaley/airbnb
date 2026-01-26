@@ -5,7 +5,7 @@ import { Check, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 
 const standardFeatures = [
-    "1 Active Listing",
+    "1 Active Listing (per property)",
     "Standard Search Placement",
     "Email Support",
     "Direct Guest Communication"

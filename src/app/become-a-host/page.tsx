@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const standardFeatures = [
-    "1 Active Listing",
+    "1 Active Listing (per property)",
     "Standard Search Placement",
     "Email Support",
     "Direct Guest Communication"

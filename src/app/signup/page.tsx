@@ -27,7 +27,7 @@ const signupSchema = z.object({
 })
 
 const standardFeatures = [
-    "1 Active Listing",
+    "1 Active Listing (per property)",
     "Standard Search Placement",
     "Email Support",
     "Direct Guest Communication"
