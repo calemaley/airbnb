@@ -13,7 +13,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 const standardFeatures = [
     "1 Active Listing (per property)",
     "Standard Search Placement",
-    "Email Support",
+    "Phone & Email Support",
     "Direct Guest Communication"
 ];
 

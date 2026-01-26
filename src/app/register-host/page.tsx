@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 const standardFeatures = [
     "1 Active Listing (per property)",
     "Standard Search Placement",
-    "Email Support",
+    "Phone & Email Support",
     "Direct Guest Communication"
 ];
 
