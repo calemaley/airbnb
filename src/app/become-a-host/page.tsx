@@ -1,27 +1,31 @@
+
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Check, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Badge } from '@/components/ui/badge';
 
 const standardFeatures = [
     "1 Active Listing (per property)",
     "Standard Search Placement",
-    "Phone & Email Support",
+    "Email Support",
     "Direct Guest Communication"
 ];
 
 const premiumFeatures = [
-    "1 Active Listing (per property)",
+    "Up to 5 Active Listings",
     "Priority Search Placement",
     "Featured on Homepage",
-    "Priority Phone & Email Support",
+    "Phone & Email Support",
     "Direct Guest Communication",
     "Premium Listing Badge",
-    "Enhanced Marketing Visibility",
-    "Priority Review & Approval"
 ];
 
 export default function BecomeAHostPage() {
+  const droneImage = PlaceHolderImages.find(p => p.id === 'marketing-drone');
+
   return (
     <div className="bg-secondary">
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -87,6 +91,49 @@ export default function BecomeAHostPage() {
                 </Button>
             </CardFooter>
           </Card>
+        </div>
+
+        <div className="max-w-4xl mx-auto mt-24">
+            <Card className="overflow-hidden shadow-lg border-primary/20">
+                <div className="grid md:grid-cols-2 items-center">
+                    <div className="p-8 order-2 md:order-1">
+                        <Badge variant="outline" className="mb-4 border-primary/50 text-primary">Marketing Bonus</Badge>
+                        <h2 className="font-headline text-3xl font-bold text-primary mb-4">
+                            Elevate Your Listing
+                        </h2>
+                        <p className="text-foreground/80 mb-6">
+                            We’re not just another listing site — we’re your marketing partner. List two paid properties and receive a complimentary professional drone shoot for one of them.
+                        </p>
+                        <ul className="space-y-3 mb-8">
+                            <li className="flex items-start">
+                                <Check className="h-5 w-5 text-primary mr-3 mt-1 flex-shrink-0" />
+                                <span><strong>Attract More Guests</strong> with stunning aerial photography that highlights your property's unique features.</span>
+                            </li>
+                            <li className="flex items-start">
+                                <Check className="h-5 w-5 text-primary mr-3 mt-1 flex-shrink-0" />
+                                <span><strong>Get a Promo Video Clip</strong> for social media (Premium listings only).</span>
+                            </li>
+                        </ul>
+                        <Button asChild>
+                            <Link href="/signup">Become a Marketing Partner</Link>
+                        </Button>
+                        <p className="text-xs text-muted-foreground mt-3">
+                            Each property requires an individual paid plan.
+                        </p>
+                    </div>
+                     <div className="relative h-64 md:h-full w-full order-1 md:order-2">
+                        {droneImage && (
+                            <Image
+                                src={droneImage.imageUrl}
+                                alt={droneImage.description}
+                                data-ai-hint={droneImage.imageHint}
+                                fill
+                                className="object-cover"
+                            />
+                        )}
+                    </div>
+                </div>
+            </Card>
         </div>
         
         <div className="text-center mt-16">
