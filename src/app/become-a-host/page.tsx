@@ -1,4 +1,5 @@
 
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Check, ArrowRight, Gift, Airplay } from 'lucide-react';
@@ -7,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { getActiveHostCount } from '@/lib/host-data';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const standardFeatures = [
     "1 Active Listing",
@@ -27,6 +29,7 @@ const premiumFeatures = [
 export default function BecomeAHostPage() {
     const activeHostCount = getActiveHostCount();
     const isFreeOfferAvailable = activeHostCount < 5;
+    const droneImage = PlaceHolderImages.find(p => p.id === 'marketing-drone');
 
   return (
     <div className="bg-secondary">
@@ -141,13 +144,15 @@ export default function BecomeAHostPage() {
                             </ul>
                         </div>
                         <div className="md:col-span-2 relative h-56 w-full rounded-lg overflow-hidden">
-                            <Image
-                                src="https://images.unsplash.com/photo-1507582020474-3a47995a1927?q=80&w=800&auto=format&fit=crop"
-                                alt="Drone photography of a coastal property"
-                                data-ai-hint="drone photography"
-                                fill
-                                className="object-cover"
-                            />
+                            {droneImage && (
+                                <Image
+                                    src={droneImage.imageUrl}
+                                    alt={droneImage.description}
+                                    data-ai-hint={droneImage.imageHint}
+                                    fill
+                                    className="object-cover"
+                                />
+                            )}
                         </div>
                     </div>
                 </CardContent>

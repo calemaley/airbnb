@@ -71,6 +71,12 @@
       "description": "Traditional Swahili house in Lamu",
       "imageUrl": "https://images.unsplash.com/photo-1610019352323-e1e77fdd32a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzd2FoaWxpJTIwaG91c2V8ZW58MHx8fHwxNzY4MjExNzc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "swahili house"
+    },
+    {
+      "id": "marketing-drone",
+      "description": "A drone in flight, ready for aerial photography",
+      "imageUrl": "https://images.unsplash.com/photo-1527977966376-92a85859346f?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "drone flight"
     }
   ]
 }
