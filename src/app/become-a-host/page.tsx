@@ -156,13 +156,6 @@ export default function BecomeAHostPage() {
                         </div>
                     </div>
                 </CardContent>
-                <CardFooter>
-                    <Button asChild size="lg">
-                        <Link href="/signup">
-                            Become a Marketing Partner
-                        </Link>
-                    </Button>
-                </CardFooter>
             </Card>
         </div>
 
