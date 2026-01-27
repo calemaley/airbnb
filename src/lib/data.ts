@@ -112,6 +112,19 @@ const allListings: Accommodation[] = [
     reviews: [],
     host: { name: 'Heidi', avatar: 'https://i.pravatar.cc/150?u=heidi' },
   },
+  {
+    id: '9',
+    name: 'KJ suits',
+    location: 'Makutano, Kinoru Stadium Road',
+    category: 'Budget',
+    pricePerNight: 2500,
+    description: 'Affordable and convenient Airbnb at KJ Suits, located on Kinoru Stadium Road in Makutano. Great value with WiFi, parking, kitchen, TV with Netflix, and a hot shower. For bookings, contact +254712413518 via Phone or WhatsApp.',
+    images: ['listing-9'],
+    amenities: ['wifi', 'parking', 'kitchen', 'tv'],
+    rating: 0,
+    reviews: [],
+    host: { name: 'KJ', avatar: 'https://i.pravatar.cc/150?u=kj' },
+  },
 ];
 
 export function getAllListings(): Accommodation[] {

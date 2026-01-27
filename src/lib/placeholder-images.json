@@ -77,6 +77,12 @@
       "description": "A modern camera drone in flight",
       "imageUrl": "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=800&auto=format&fit=crop",
       "imageHint": "camera drone"
+    },
+    {
+      "id": "listing-9",
+      "description": "A clean and modern studio apartment",
+      "imageUrl": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzdHVkaW8lMjBhcGFydG1lbnR8ZW58MHx8fHwxNzE5NTkwMzIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "studio apartment"
     }
   ]
 }
