@@ -98,11 +98,9 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const { data: listing, loading } = useDoc<Accommodation>(listingRef);
 
   const bookingsQuery = useMemo(() => {
-    // Only fetch bookings for the calendar if a user is logged in, to avoid permission errors.
-    // Public users won't see disabled dates, but the app won't crash.
-    if (!firestore || !params.id || !user) return null;
+    if (!firestore || !params.id) return null;
     return query(collection(firestore, 'bookings'), where('listingId', '==', params.id));
-  }, [firestore, params.id, user]);
+  }, [firestore, params.id]);
 
   const { data: bookings } = useCollection<Booking>(bookingsQuery);
 

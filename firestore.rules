@@ -46,8 +46,8 @@ service cloud.firestore {
         return get(/databases/$(database)/documents/listings/$(request.resource.data.listingId)).data;
       }
       
-      // Guest or Host can read the booking
-      allow read: if isSignedIn() && (isOwner(resource.data.guestId) || isOwner(resource.data.hostId));
+      // Anyone can read booking data to show calendar availability.
+      allow read;
       
       // A guest (signed-in or not) can create a booking.
       allow create: if request.resource.data.hostId == getListing().userId &&
