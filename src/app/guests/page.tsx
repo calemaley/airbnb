@@ -44,6 +44,7 @@ export default function GuestPage() {
             fill
             className="object-cover"
             priority
+            quality={100}
           />
         )}
         <div className="absolute inset-0 bg-black/50" />

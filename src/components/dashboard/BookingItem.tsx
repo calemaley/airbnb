@@ -64,6 +64,7 @@ export function BookingItem({ booking, perspective }: BookingItemProps) {
                     alt={listing.name}
                     fill
                     className="object-cover"
+                    quality={100}
                     />
                 ) : <div className="bg-secondary h-full w-full"/>}
             </div>

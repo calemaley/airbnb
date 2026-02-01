@@ -127,6 +127,7 @@ export default function BecomeAHostPage() {
                                 alt={droneImage.description}
                                 data-ai-hint={droneImage.imageHint}
                                 fill
+                                quality={100}
                                 className="object-cover"
                             />
                         )}

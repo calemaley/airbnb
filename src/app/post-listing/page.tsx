@@ -386,7 +386,7 @@ export default function PostListingPage() {
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pt-4">
                                 {imageUrls.map((url, index) => (
                                     <div key={index} className="relative group aspect-square">
-                                        <Image src={url} alt={`Listing image ${index + 1}`} fill className="object-cover rounded-md border" />
+                                        <Image src={url} alt={`Listing image ${index + 1}`} fill className="object-cover rounded-md border" quality={100} />
                                         <Button 
                                             type="button"
                                             variant="destructive"

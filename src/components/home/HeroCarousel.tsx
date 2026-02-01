@@ -68,7 +68,7 @@ export default function HeroCarousel() {
                 fill
                 className="object-cover"
                 priority={index === 0}
-                quality={90}
+                quality={100}
               />
             </div>
           </CarouselItem>

@@ -22,6 +22,7 @@ export default function AboutPage() {
                             alt={aboutImage.description}
                             data-ai-hint={aboutImage.imageHint}
                             fill
+                            quality={100}
                             className="object-cover"
                         />
                     }
