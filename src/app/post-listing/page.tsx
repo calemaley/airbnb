@@ -92,18 +92,8 @@ export default function PostListingPage() {
 
   const handleAddImageUrl = () => {
     if (currentImageUrl && !imageUrls.includes(currentImageUrl)) {
-      try {
-        // Basic URL validation
-        new URL(currentImageUrl);
-        setImageUrls([...imageUrls, currentImageUrl]);
-        setCurrentImageUrl("");
-      } catch (_) {
-        toast({
-          variant: "destructive",
-          title: "Invalid URL",
-          description: "Please enter a valid image URL.",
-        });
-      }
+      setImageUrls([...imageUrls, currentImageUrl]);
+      setCurrentImageUrl("");
     }
   };
 

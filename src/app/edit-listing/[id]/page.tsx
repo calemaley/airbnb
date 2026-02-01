@@ -117,17 +117,8 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
 
   const handleAddImageUrl = () => {
     if (currentImageUrl && !imageUrls.includes(currentImageUrl)) {
-      try {
-        new URL(currentImageUrl);
-        setImageUrls([...imageUrls, currentImageUrl]);
-        setCurrentImageUrl("");
-      } catch (_) {
-        toast({
-          variant: "destructive",
-          title: "Invalid URL",
-          description: "Please enter a valid image URL.",
-        });
-      }
+      setImageUrls([...imageUrls, currentImageUrl]);
+      setCurrentImageUrl("");
     }
   };
 
