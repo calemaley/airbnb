@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import NotificationBar from '@/components/layout/NotificationBar';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
@@ -34,7 +33,6 @@ export default function RootLayout({
       <body className={cn('min-h-screen bg-background font-body antialiased')}>
         <FirebaseClientProvider>
           <div className="relative flex min-h-screen flex-col">
-            <NotificationBar />
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
