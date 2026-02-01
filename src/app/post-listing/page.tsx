@@ -8,7 +8,9 @@ import * as z from "zod"
 import { addDoc, collection } from "firebase/firestore"
 import { useFirestore, useUser, useStorage } from "@/firebase"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { suggestCategory, type SuggestCategoryInput } from "@/ai/flows/category-suggestion";
+import { suggestCategory } from "@/ai/flows/category-suggestion";
+import type { SuggestCategoryInput, SuggestCategoryOutput } from "@/ai/flows/category-suggestion";
+
 
 import { Button } from "@/components/ui/button"
 import {
@@ -94,7 +96,7 @@ export default function PostListingPage() {
     setAiError(null);
     try {
       const input: SuggestCategoryInput = { description: aiDescription };
-      const result = await suggestCategory(input);
+      const result: SuggestCategoryOutput = await suggestCategory(input);
       if (result?.category) {
         form.setValue("category", result.category);
         toast({
@@ -174,10 +176,17 @@ export default function PostListingPage() {
 
     } catch(error: any) {
         console.error("Submission process failed:", error);
+        let description = "Could not submit your listing. Please try again.";
+        if (error.code === 'storage/retry-limit-exceeded') {
+          description = "Image upload timed out. Please check your internet connection or try again with smaller files.";
+        } else {
+          description = error.message || description;
+        }
+
         toast({
           variant: "destructive",
           title: "Submission Failed",
-          description: error.message || "Could not submit your listing.",
+          description: description,
         });
     } finally {
         setIsSubmitting(false);
@@ -374,6 +383,8 @@ export default function PostListingPage() {
     </div>
   )
 }
+
+    
 
     
 
