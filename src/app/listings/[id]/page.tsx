@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -80,6 +80,14 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [today, setToday] = useState<Date | null>(null);
+
+  useEffect(() => {
+    // Set today's date only on the client-side to prevent hydration mismatch
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    setToday(startOfToday);
+  }, []);
   
   const listingRef = useMemo(() => {
     if (!firestore || !params.id) return null;
@@ -108,16 +116,16 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   }, [bookings]);
 
   const canReview = useMemo(() => {
-    if (!user || !bookings || !listing) return false;
+    if (!user || !bookings || !listing || !today) return false;
     
     const hasCompletedBooking = bookings.some(b => 
-        b.guestId === user.uid && new Date(b.checkOutDate) < new Date()
+        b.guestId === user.uid && new Date(b.checkOutDate) < today
     );
 
     const hasAlreadyReviewed = listing.reviews.some(r => r.userId === user.uid);
 
     return hasCompletedBooking && !hasAlreadyReviewed;
-  }, [user, bookings, listing]);
+  }, [user, bookings, listing, today]);
 
 
   const handleReserve = () => {
@@ -395,15 +403,17 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={date?.from}
-                      selected={date}
-                      onSelect={setDate}
-                      numberOfMonths={1}
-                      disabled={day => disabledDates.some(disabled => format(disabled, 'y-MM-dd') === format(day, 'y-MM-dd')) || day < new Date(new Date().setHours(0,0,0,0))}
-                    />
+                    {today && (
+                      <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={date?.from}
+                        selected={date}
+                        onSelect={setDate}
+                        numberOfMonths={1}
+                        disabled={day => disabledDates.some(disabled => format(disabled, 'y-MM-dd') === format(day, 'y-MM-dd')) || day < today}
+                      />
+                    )}
                   </PopoverContent>
                 </Popover>
               </div>
