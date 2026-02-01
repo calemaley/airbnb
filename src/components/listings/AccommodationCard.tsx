@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
+import { MapPin, Hotel } from 'lucide-react';
 import type { Accommodation } from '@/lib/types';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Rating } from '@/components/ui/rating';
@@ -13,21 +12,24 @@ interface AccommodationCardProps {
 }
 
 export function AccommodationCard({ listing }: AccommodationCardProps) {
-  const image = PlaceHolderImages.find((p) => p.id === listing.images[0]);
+  const imageUrl = listing.images && listing.images.length > 0 ? listing.images[0] : null;
 
   return (
     <Card className="w-full overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
       <Link href={`/listings/${listing.id}`} className="block">
         <div className="relative h-56 w-full">
-          {image && (
+          {imageUrl ? (
             <Image
-              src={image.imageUrl}
+              src={imageUrl}
               alt={listing.name}
-              data-ai-hint={image.imageHint}
               fill
               className="object-cover"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-secondary text-muted-foreground">
+              <Hotel size={48} />
+            </div>
           )}
           {listing.category === 'Luxury' ? (
               <PremiumBadge className="absolute top-2 right-2"/>

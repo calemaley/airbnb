@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -71,9 +70,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
     notFound();
   }
   
-  const listingImages = listing.images
-    .map((id) => PlaceHolderImages.find((p) => p.id === id))
-    .filter(Boolean);
+  const listingImages = listing.images || [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -97,10 +94,10 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
       
       <Carousel className="w-full rounded-lg overflow-hidden shadow-lg mb-8">
         <CarouselContent>
-          {listingImages.length > 0 ? listingImages.map((image, index) => image && (
+          {listingImages.length > 0 ? listingImages.map((imageUrl, index) => (
             <CarouselItem key={index}>
               <div className="relative h-[500px]">
-                <Image src={image.imageUrl} alt={`${listing.name} - image ${index + 1}`} data-ai-hint={image.imageHint} fill className="object-cover" />
+                <Image src={imageUrl} alt={`${listing.name} - image ${index + 1}`} fill className="object-cover" />
               </div>
             </CarouselItem>
           )) : (

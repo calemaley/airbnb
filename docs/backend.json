@@ -53,7 +53,7 @@
             "items": {
                 "type": "string"
             },
-            "description": "Array of image placeholder IDs."
+            "description": "Array of image URLs from Firebase Storage."
         },
         "rating": {
             "type": "number"

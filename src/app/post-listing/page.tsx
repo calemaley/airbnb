@@ -1,10 +1,12 @@
 "use client"
 
+import React, { useState } from "react";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { addDoc, collection } from "firebase/firestore"
-import { useFirestore, useUser } from "@/firebase"
+import { useFirestore, useUser, useStorage } from "@/firebase"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -30,6 +32,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast"
 import { errorEmitter } from "@/firebase/error-emitter"
 import { FirestorePermissionError } from "@/firebase/errors"
+import { Loader2 } from "lucide-react";
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -54,7 +57,10 @@ const formSchema = z.object({
 export default function PostListingPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
+  const storage = useStorage();
   const { user } = useUser();
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,8 +74,14 @@ export default function PostListingPage() {
     },
   })
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+        setImageFiles(Array.from(e.target.files));
+    }
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!firestore || !user) {
+    if (!firestore || !user || !storage) {
       toast({
         variant: "destructive",
         title: "Authentication Error",
@@ -78,31 +90,47 @@ export default function PostListingPage() {
       return;
     }
 
-    form.control.register('name', { disabled: true });
-    
-    const newListingData = {
-      ...values,
-      userId: user.uid,
-      rating: 0,
-      images: [], // Placeholder for future implementation
-      reviews: [],
-    };
-    
-    const listingsCollection = collection(firestore, "listings");
+    if (imageFiles.length === 0) {
+        toast({ variant: "destructive", title: "Images Required", description: "Please upload at least one image for your listing." });
+        return;
+    }
 
-    addDoc(listingsCollection, newListingData)
-      .then(() => {
+    setIsSubmitting(true);
+    
+    try {
+        const uploadPromises = imageFiles.map(file => {
+            const fileRef = ref(storage, `listings/${user.uid}/${Date.now()}_${file.name}`);
+            return uploadBytes(fileRef, file).then(snapshot => getDownloadURL(snapshot.ref));
+        });
+
+        const imageUrls = await Promise.all(uploadPromises);
+    
+        const newListingData = {
+          ...values,
+          userId: user.uid,
+          rating: 0,
+          images: imageUrls,
+          reviews: [],
+        };
+        
+        const listingsCollection = collection(firestore, "listings");
+
+        await addDoc(listingsCollection, newListingData)
+        
         toast({
           title: "Listing Submitted!",
           description: "Your listing has been submitted and is now live!",
         });
         form.reset();
-      })
-      .catch((serverError) => {
+        setImageFiles([]);
+        const fileInput = document.getElementById('images') as HTMLInputElement;
+        if(fileInput) fileInput.value = '';
+
+    } catch(serverError: any) {
         const permissionError = new FirestorePermissionError({
-          path: listingsCollection.path,
+          path: "listings",
           operation: 'create',
-          requestResourceData: newListingData,
+          requestResourceData: values,
         });
         errorEmitter.emit('permission-error', permissionError);
         
@@ -111,10 +139,9 @@ export default function PostListingPage() {
           title: "Submission Failed",
           description: serverError.message || "Could not submit your listing.",
         });
-      })
-      .finally(() => {
-        form.control.register('name', { disabled: false });
-      });
+    } finally {
+        setIsSubmitting(false);
+    }
   }
 
   return (
@@ -270,14 +297,14 @@ export default function PostListingPage() {
                     <FormItem>
                         <FormLabel className="text-lg">Upload Images</FormLabel>
                         <FormControl>
-                            <Input type="file" multiple disabled />
+                            <Input id="images" type="file" multiple accept="image/*" onChange={handleFileChange} disabled={isSubmitting}/>
                         </FormControl>
-                        <FormDescription>Image uploads are not implemented in this demo. This is a placeholder.</FormDescription>
+                        <FormDescription>Select one or more images for your listing.</FormDescription>
                     </FormItem>
 
 
-                    <Button type="submit" size="lg" className="w-full md:w-auto" disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? "Submitting..." : "Submit Listing for Review"}
+                    <Button type="submit" size="lg" className="w-full md:w-auto" disabled={isSubmitting}>
+                        {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting...</> : "Submit Listing for Review"}
                     </Button>
                 </form>
                 </Form>
