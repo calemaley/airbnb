@@ -5,7 +5,6 @@
  * 
  * - suggestCategory - A function that suggests a category based on a description.
  * - SuggestCategoryInput - The input type for the suggestCategory function.
- * - SuggestCategoryOutput - The return type for the suggestCategory function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -23,7 +22,7 @@ const SuggestCategoryOutputSchema = z.object({
     'The suggested category for the property. Must be one of "Budget", "Mid-range", or "Luxury".'
   ),
 });
-export type SuggestCategoryOutput = z.infer<typeof SuggestCategoryOutputSchema>;
+type SuggestCategoryOutput = z.infer<typeof SuggestCategoryOutputSchema>;
 
 export async function suggestCategory(
   input: SuggestCategoryInput

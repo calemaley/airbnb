@@ -5,7 +5,6 @@
  * 
  * - recommendAccommodations - A function that answers user questions about the platform.
  * - AccommodationPreferencesInput - The input type for the recommendAccommodations function.
- * - AccommodationRecommendationsOutput - The return type for the recommendAccommodations function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -31,7 +30,7 @@ const AccommodationRecommendationsOutputSchema = z.object({
     .string()
     .describe('A helpful answer to the user\'s question.'),
 });
-export type AccommodationRecommendationsOutput = z.infer<
+type AccommodationRecommendationsOutput = z.infer<
   typeof AccommodationRecommendationsOutputSchema
 >;
 

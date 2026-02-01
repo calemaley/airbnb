@@ -7,7 +7,7 @@ import * as z from "zod"
 import { doc, updateDoc } from "firebase/firestore"
 import { useFirestore, useUser, useDoc } from "@/firebase"
 import { suggestCategory } from "@/ai/flows/category-suggestion";
-import type { SuggestCategoryInput, SuggestCategoryOutput } from "@/ai/flows/category-suggestion";
+import type { SuggestCategoryInput } from "@/ai/flows/category-suggestion";
 import Image from "next/image";
 import { notFound, useRouter } from "next/navigation";
 
@@ -133,7 +133,7 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
     setAiError(null);
     try {
       const input: SuggestCategoryInput = { description };
-      const result: SuggestCategoryOutput = await suggestCategory(input);
+      const result = await suggestCategory(input);
       if (result?.category) {
         form.setValue("category", result.category);
         toast({
