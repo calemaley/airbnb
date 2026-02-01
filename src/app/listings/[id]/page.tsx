@@ -27,6 +27,8 @@ import {
   AlertCircle,
   ShowerHead,
   Clapperboard,
+  User as UserIcon,
+  Phone,
 } from 'lucide-react';
 import type { Amenity, Accommodation, Booking } from '@/lib/types';
 import { Input } from '@/components/ui/input';
@@ -229,6 +231,29 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
               </div>
             ))}
           </div>
+
+          {(listing.hostName || listing.hostPhoneNumber) && (
+            <>
+              <Separator className="my-8" />
+              <div>
+                <h3 className="font-headline text-xl font-bold mb-4">Host Information</h3>
+                <div className="flex flex-col sm:flex-row gap-6 text-lg">
+                  {listing.hostName && (
+                    <div className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-primary" />
+                      <span>{listing.hostName}</span>
+                    </div>
+                  )}
+                  {listing.hostPhoneNumber && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-5 w-5 text-primary" />
+                      <a href={`tel:${listing.hostPhoneNumber}`} className="hover:underline">{listing.hostPhoneNumber}</a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
 
           <Separator className="my-8" />
           

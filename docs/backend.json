@@ -67,6 +67,14 @@
             "items": {
                 "type": "object"
             }
+        },
+        "hostName": {
+            "type": "string",
+            "description": "The name of the host for this listing."
+        },
+        "hostPhoneNumber": {
+            "type": "string",
+            "description": "The contact phone number for this listing."
         }
       },
       "required": ["userId", "name", "location", "pricePerNight", "priceType", "category", "description"]

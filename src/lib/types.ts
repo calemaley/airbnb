@@ -27,6 +27,8 @@ export interface Accommodation {
     avatar: string;
   };
   userId: string;
+  hostName?: string;
+  hostPhoneNumber?: string;
 }
 
 export interface UserProfile {

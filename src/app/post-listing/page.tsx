@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { addDoc, collection } from "firebase/firestore"
-import { useFirestore, useUser } from "@/firebase"
+import { addDoc, collection, serverTimestamp, UploadTask, getDownloadURL, ref, uploadBytesResumable } from "firebase/firestore"
+import { useFirestore, useUser, useStorage } from "@/firebase"
 import { suggestCategory } from "@/ai/flows/category-suggestion";
 import type { SuggestCategoryInput, SuggestCategoryOutput } from "@/ai/flows/category-suggestion";
 import Image from "next/image";
@@ -37,6 +37,7 @@ import { errorEmitter } from "@/firebase/error-emitter"
 import { FirestorePermissionError } from "@/firebase/errors"
 import { Loader2, Sparkles, Bot, PlusCircle, Trash2 } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Progress } from "@/components/ui/progress";
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -51,6 +52,8 @@ const amenities = [
 
 const formSchema = z.object({
   name: z.string().min(5, "Title must be at least 5 characters long."),
+  hostName: z.string().min(3, "Host name is required."),
+  hostPhoneNumber: z.string().min(10, "A valid phone number is required."),
   location: z.string().min(3, "Location is required."),
   description: z.string().min(20, "Description must be at least 20 characters long.").max(5000, "Description must be 5000 characters or less."),
   pricePerNight: z.coerce.number().min(1000, "Price must be at least KES 1000."),
@@ -76,6 +79,8 @@ export default function PostListingPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      hostName: "",
+      hostPhoneNumber: "",
       location: "",
       description: "",
       pricePerNight: 5000,
@@ -222,6 +227,37 @@ export default function PostListingPage() {
                         </FormItem>
                     )}
                     />
+                    
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <FormField
+                            control={form.control}
+                            name="hostName"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel className="text-lg">Host Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g. John Doe" {...field} />
+                                </FormControl>
+                                <FormDescription>Your name that will be displayed to guests.</FormDescription>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="hostPhoneNumber"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel className="text-lg">Host Phone Number</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g. 0712345678" {...field} />
+                                </FormControl>
+                                <FormDescription>Your phone number for guests to contact you.</FormDescription>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
 
                     <div className="grid md:grid-cols-2 gap-8">
                         <FormField
