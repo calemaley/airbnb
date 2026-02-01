@@ -2,9 +2,8 @@
 
 import React, { useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Search, Loader2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { AccommodationCard } from '@/components/listings/AccommodationCard';
 import AiRecommender from '@/components/home/AiRecommender';
 import HeroCarousel from '@/components/home/HeroCarousel';
@@ -12,6 +11,7 @@ import { useCollection, useFirestore } from '@/firebase';
 import { collection, query, limit } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Accommodation } from '@/lib/types';
+import HomeSearch from '@/components/home/HomeSearch';
 
 export default function Home() {
   const firestore = useFirestore();
@@ -41,20 +41,7 @@ export default function Home() {
       <div className="container px-4 -mt-40 z-20 relative">
         <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 md:p-8 shadow-2xl border">
           <div className=" text-center">
-            <div className="w-full max-w-2xl mx-auto">
-              <form className="flex flex-col sm:flex-row gap-2">
-                <Input
-                  type="text"
-                  placeholder="Search by location, e.g., 'Meru Town', 'Imenti'"
-                  className="h-14 text-lg"
-                />
-                <Button type="submit" size="lg" className="h-14 text-lg">
-                  <Search className="mr-2 h-5 w-5" />
-                  Search
-                </Button>
-              </form>
-              <p className="text-sm mt-2 text-muted-foreground">More counties coming soon.</p>
-            </div>
+            <HomeSearch />
           </div>
         </div>
       </div>

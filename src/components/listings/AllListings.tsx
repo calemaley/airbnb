@@ -9,13 +9,16 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { useCollection, useFirestore } from '@/firebase';
 import { collection, query } from 'firebase/firestore';
-import { Loader2 } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
+import { useSearchParams } from 'next/navigation';
 
 const MAX_PRICE = 50000;
 
 export default function AllListings() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const searchParams = useSearchParams();
+  const initialSearchTerm = searchParams.get('q') || '';
+  
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [category, setCategory] = useState('all');
   const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
 
