@@ -1,14 +1,19 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { useAuth } from "@/firebase"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
+import { Loader2 } from "lucide-react"
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address."),
@@ -16,15 +21,32 @@ const loginSchema = z.object({
 })
 
 export default function LoginPage() {
+  const auth = useAuth()
+  const router = useRouter()
+  const { toast } = useToast()
+  
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   })
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    // Firebase login logic would go here
-    console.log(values)
-    alert("Login functionality not implemented in this demo.")
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    if (!auth) return;
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password)
+      toast({
+        title: "Login Successful",
+        description: "Welcome back!",
+      })
+      router.push("/dashboard")
+    } catch (error: any) {
+      console.error("Login failed:", error)
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: error.message || "An unexpected error occurred.",
+      })
+    }
   }
 
   return (
@@ -65,7 +87,8 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Log In
               </Button>
             </form>

@@ -3,19 +3,19 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, Hotel } from 'lucide-react';
+import { Menu, X, Hotel, LogOut, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/listings', label: 'Explore Listings' },
-  { href: '/become-a-host', label: 'Become a Host' },
-  { href: '/about', label: 'About StaysKenya' },
-];
+import { useUser } from '@/firebase';
+import { getAuth, signOut } from 'firebase/auth';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, loading } = useUser();
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -26,24 +26,37 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex gap-6 text-sm font-medium">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              {label}
-            </Link>
-          ))}
+          <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">Home</Link>
+          <Link href="/listings" className="transition-colors hover:text-foreground/80 text-foreground/60">Explore Listings</Link>
+          <Link href="/become-a-host" className="transition-colors hover:text-foreground/80 text-foreground/60">Become a Host</Link>
+          <Link href="/about" className="transition-colors hover:text-foreground/80 text-foreground/60">About StaysKenya</Link>
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-2">
-          <Button variant="ghost" asChild>
-            <Link href="/login">Log In</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/signup">Sign Up</Link>
-          </Button>
+          {!loading && (
+            <>
+              {user ? (
+                <>
+                  <Button variant="ghost" asChild>
+                    <Link href="/dashboard"><LayoutDashboard className="mr-2"/>Dashboard</Link>
+                  </Button>
+                  <Button variant="outline" onClick={handleLogout}>
+                    <LogOut className="mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="ghost" asChild>
+                    <Link href="/login">Log In</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/signup">Sign Up</Link>
+                  </Button>
+                </>
+              )}
+            </>
+          )}
           <Button
             variant="ghost"
             className="md:hidden"
@@ -58,16 +71,10 @@ export default function Header() {
       {isOpen && (
         <div className="md:hidden">
           <div className="container py-4 flex flex-col gap-4">
-            {navLinks.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="font-medium text-lg"
-                onClick={() => setIsOpen(false)}
-              >
-                {label}
-              </Link>
-            ))}
+            <Link href="/" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Home</Link>
+            <Link href="/listings" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Explore Listings</Link>
+            <Link href="/become-a-host" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Become a Host</Link>
+            <Link href="/about" className="font-medium text-lg" onClick={() => setIsOpen(false)}>About StaysKenya</Link>
           </div>
         </div>
       )}
