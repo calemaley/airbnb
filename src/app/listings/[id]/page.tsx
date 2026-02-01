@@ -120,9 +120,9 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   }, [user, bookings, listing]);
 
 
-  const handleReserve = async () => {
+  const handleReserve = () => {
     if (!user) {
-      router.push('/login?redirect=/listings/' + params.id);
+      router.push('/login?redirect=' + encodeURIComponent('/listings/' + params.id));
       return;
     }
     if (!listing || !date?.from || !date?.to) {
@@ -134,44 +134,26 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
       return;
     }
 
-    setIsBooking(true);
-    try {
-      const numberOfNights = differenceInCalendarDays(date.to, date.from);
-      if (numberOfNights <= 0) {
-        throw new Error("Check-out date must be after check-in date.");
-      }
-
-      const newBooking = {
-        listingId: listing.id,
-        guestId: user.uid,
-        hostId: listing.userId,
-        checkInDate: date.from.toISOString(),
-        checkOutDate: date.to.toISOString(),
-        totalPrice: listing.pricePerNight * numberOfNights,
-        guests,
-        status: 'confirmed' as const,
-      };
-
-      await addDoc(collection(firestore, 'bookings'), newBooking);
-
-      toast({
-        title: "Booking Successful!",
-        description: `You've booked ${listing.name}. Check "My Bookings" for details.`,
-        duration: 5000,
-      });
-
-      router.push('/my-bookings');
-
-    } catch(e: any) {
-      console.error("Booking failed:", e);
-      toast({
-        variant: "destructive",
-        title: "Booking Failed",
-        description: e.message || "Could not complete your booking. Please try again.",
-      });
-    } finally {
-      setIsBooking(false);
+     const numberOfNights = differenceInCalendarDays(date.to, date.from);
+    if (numberOfNights <= 0) {
+        toast({
+            variant: "destructive",
+            title: "Invalid Dates",
+            description: "Check-out date must be after check-in date.",
+        });
+        return;
     }
+
+    setIsBooking(true);
+
+    const queryParams = new URLSearchParams({
+        listingId: params.id,
+        checkIn: date.from.toISOString(),
+        checkOut: date.to.toISOString(),
+        guests: guests.toString(),
+    });
+
+    router.push(`/book?${queryParams.toString()}`);
   }
 
   const handleReviewSubmit = async (e: React.FormEvent) => {

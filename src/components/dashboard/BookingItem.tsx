@@ -5,11 +5,12 @@ import { useDoc, useFirestore } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import type { Booking, Accommodation, UserProfile } from '@/lib/types';
 import { format } from 'date-fns';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Calendar, Users, BedDouble, Mail } from 'lucide-react';
+import { Calendar, Users, BedDouble, Mail, Printer } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface BookingItemProps {
   booking: Booking;
@@ -117,6 +118,12 @@ export function BookingItem({ booking, perspective }: BookingItemProps) {
                         Total Price: KES {booking.totalPrice.toLocaleString()}
                     </div>
                 </CardContent>
+                 <CardFooter className="p-4 pt-0">
+                  <Button variant="outline" className="ml-auto" onClick={() => window.print()}>
+                    <Printer className="mr-2 h-4 w-4"/>
+                    Print Details
+                  </Button>
+                </CardFooter>
             </div>
         </div>
     </Card>
