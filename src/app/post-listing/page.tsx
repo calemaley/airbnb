@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { addDoc, collection } from "firebase/firestore"
 import { useFirestore, useUser, useStorage } from "@/firebase"
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { suggestCategory } from "@/ai/flows/category-suggestion";
 import type { SuggestCategoryInput, SuggestCategoryOutput } from "@/ai/flows/category-suggestion";
 
@@ -37,6 +37,7 @@ import { useToast } from "@/hooks/use-toast"
 import { errorEmitter } from "@/firebase/error-emitter"
 import { FirestorePermissionError } from "@/firebase/errors"
 import { Loader2, Sparkles, Bot } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -65,6 +66,7 @@ export default function PostListingPage() {
   const { user } = useUser();
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [aiDescription, setAiDescription] = useState("");
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -136,43 +138,64 @@ export default function PostListingPage() {
     }
 
     setIsSubmitting(true);
+    setUploadProgress(0);
     
     try {
-        const uploadPromises = imageFiles.map(file => {
-            const fileRef = ref(storage, `listings/${user.uid}/${Date.now()}_${file.name}`);
-            return uploadBytes(fileRef, file).then(snapshot => getDownloadURL(snapshot.ref));
-        });
+      const totalSize = imageFiles.reduce((acc, file) => acc + file.size, 0);
+      const progressByFile: { [key: string]: number } = {};
 
-        const imageUrls = await Promise.all(uploadPromises);
+      const uploadPromises = imageFiles.map(file => {
+        const fileRef = ref(storage, `listings/${user.uid}/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(fileRef, file);
+
+        return new Promise((resolve, reject) => {
+          uploadTask.on('state_changed',
+            (snapshot) => {
+                progressByFile[file.name] = snapshot.bytesTransferred;
+                const totalTransferred = Object.values(progressByFile).reduce((acc, bytes) => acc + bytes, 0);
+                setUploadProgress((totalTransferred / totalSize) * 100);
+            },
+            (error) => reject(error),
+            async () => {
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                resolve(downloadURL);
+            }
+          );
+        });
+      });
+
+      const imageUrls = await Promise.all(uploadPromises);
     
-        const newListingData = {
-          ...values,
-          userId: user.uid,
-          rating: 0,
-          images: imageUrls,
-          reviews: [],
-        };
-        
-        const listingsCollection = collection(firestore, "listings");
+      const newListingData = {
+        ...values,
+        userId: user.uid,
+        rating: 0,
+        images: imageUrls,
+        reviews: [],
+      };
+      
+      const listingsCollection = collection(firestore, "listings");
 
-        addDoc(listingsCollection, newListingData)
-          .catch((serverError) => {
-              const permissionError = new FirestorePermissionError({
-                path: 'listings',
-                operation: 'create',
-                requestResourceData: newListingData,
-              });
-              errorEmitter.emit('permission-error', permissionError);
-          });
-        
-        toast({
-          title: "Listing Submitted!",
-          description: "Your listing has been submitted and is now live!",
+      addDoc(listingsCollection, newListingData)
+        .catch((serverError) => {
+            const permissionError = new FirestorePermissionError({
+              path: 'listings',
+              operation: 'create',
+              requestResourceData: newListingData,
+            });
+            errorEmitter.emit('permission-error', permissionError);
         });
-        form.reset();
-        setImageFiles([]);
-        const fileInput = document.getElementById('images') as HTMLInputElement;
-        if(fileInput) fileInput.value = '';
+      
+      toast({
+        title: "Listing Submitted!",
+        description: "Your listing has been submitted and is now live!",
+      });
+
+      form.reset();
+      setImageFiles([]);
+      setUploadProgress(0);
+      const fileInput = document.getElementById('images') as HTMLInputElement;
+      if(fileInput) fileInput.value = '';
 
     } catch(error: any) {
         console.error("Submission process failed:", error);
@@ -190,6 +213,7 @@ export default function PostListingPage() {
         });
     } finally {
         setIsSubmitting(false);
+        setUploadProgress(0);
     }
   }
 
@@ -372,9 +396,16 @@ export default function PostListingPage() {
                         <FormDescription>Select one or more images for your listing.</FormDescription>
                     </FormItem>
 
+                     {isSubmitting && (
+                        <div className="space-y-2">
+                            <FormLabel>Uploading Images...</FormLabel>
+                            <Progress value={uploadProgress} className="w-full" />
+                            <p className="text-sm text-muted-foreground">{Math.round(uploadProgress)}% complete</p>
+                        </div>
+                    )}
 
                     <Button type="submit" size="lg" className="w-full md:w-auto" disabled={isSubmitting}>
-                        {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting...</> : "Submit Listing for Review"}
+                        {isSubmitting ? "Submitting..." : "Submit Listing for Review"}
                     </Button>
                 </form>
                 </Form>
@@ -383,9 +414,3 @@ export default function PostListingPage() {
     </div>
   )
 }
-
-    
-
-    
-
-    
