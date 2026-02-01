@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useEffect, useMemo } from "react";
@@ -66,6 +67,7 @@ const formSchema = z.object({
 })
 
 export default function EditListingPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const { toast } = useToast();
   const firestore = useFirestore();
   const { user, loading: userLoading } = useUser();
@@ -78,9 +80,9 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
   const [aiError, setAiError] = useState<string | null>(null);
 
   const listingRef = useMemo(() => {
-    if (!firestore || !params.id) return null;
-    return doc(firestore, 'listings', params.id);
-  }, [firestore, params.id]);
+    if (!firestore || !id) return null;
+    return doc(firestore, 'listings', id);
+  }, [firestore, id]);
 
   const { data: listing, loading: listingLoading } = useDoc<Accommodation>(listingRef);
 
