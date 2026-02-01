@@ -24,7 +24,7 @@ export default function Header() {
           <span className="font-bold inline-block font-headline text-xl">StaysKenya</span>
         </Link>
 
-        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="hidden md:flex">
             <nav className="flex items-center gap-8 text-sm font-medium">
                 <Link href="/" className="transition-colors hover:text-primary text-foreground/80">Home</Link>
                 <Link href="/listings" className="transition-colors hover:text-primary text-foreground/80">Explore Listings</Link>
