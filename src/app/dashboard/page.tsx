@@ -2,7 +2,7 @@
 
 import { useUser, useFirestore, useCollection } from '@/firebase';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,17 +11,30 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Loader2, LogOut, MapPin } from 'lucide-react';
+import { Loader2, LogOut, Trash2 } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import Link from 'next/link';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, query, where, doc, deleteDoc } from 'firebase/firestore';
 import type { Accommodation } from '@/lib/types';
 import { AccommodationCard } from '@/components/listings/AccommodationCard';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function DashboardPage() {
   const { user, profile, loading } = useUser();
   const router = useRouter();
   const firestore = useFirestore();
+  const { toast } = useToast();
+  const [listingToDelete, setListingToDelete] = useState<Accommodation | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -40,6 +53,33 @@ export default function DashboardPage() {
     const auth = getAuth();
     await signOut(auth);
     router.push('/');
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, listing: Accommodation) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setListingToDelete(listing);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!firestore || !listingToDelete) return;
+    try {
+      const listingRef = doc(firestore, 'listings', listingToDelete.id);
+      await deleteDoc(listingRef);
+      toast({
+        title: "Success",
+        description: `Listing "${listingToDelete.name}" has been deleted.`,
+      });
+    } catch (error: any) {
+      console.error("Error deleting listing:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete listing. Please try again.",
+      });
+    } finally {
+      setListingToDelete(null);
+    }
   };
 
   if (loading || !user) {
@@ -91,7 +131,18 @@ export default function DashboardPage() {
             {listings && listings.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {listings.map((listing) => (
-                  <AccommodationCard key={listing.id} listing={listing} />
+                  <div key={listing.id} className="relative group">
+                    <AccommodationCard listing={listing} />
+                    <Button 
+                      variant="destructive"
+                      size="icon" 
+                      className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      onClick={(e) => handleDeleteClick(e, listing)}
+                      aria-label="Delete listing"
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 ))}
               </div>
             ) : (
@@ -100,6 +151,25 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {listingToDelete && (
+        <AlertDialog open={!!listingToDelete} onOpenChange={(open) => !open && setListingToDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the listing for "{listingToDelete.name}".
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setListingToDelete(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteConfirm}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 }
