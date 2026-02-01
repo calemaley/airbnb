@@ -50,4 +50,5 @@ export interface Booking {
   status: 'confirmed';
   listing?: Accommodation;
   guest?: UserProfile;
+  paymentRef?: string;
 }

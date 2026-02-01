@@ -115,6 +115,10 @@
           "enum": [
             "confirmed"
           ]
+        },
+        "paymentRef": {
+            "type": "string",
+            "description": "The reference ID from the payment gateway transaction."
         }
       },
       "required": [
