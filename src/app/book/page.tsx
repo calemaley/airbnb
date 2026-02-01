@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Suspense, useMemo, useState } from 'react';
@@ -139,6 +138,13 @@ function BookPageContents() {
           amount: totalCost * 100, // Amount in cents
           currency: 'KES',
           ref: '' + Math.floor((Math.random() * 1000000000) + 1), // unique ref
+          channels: ['mobile_money', 'card'], // Prioritize M-Pesa and Card
+          metadata: {
+            guest_name: details.name || 'Guest',
+            guest_phone: details.phone,
+            listing_id: listing.id,
+            listing_name: listing.name,
+          },
           onSuccess: (response: any) => {
             saveBooking(response, details);
           },
@@ -158,7 +164,7 @@ function BookPageContents() {
 
     const handleInitiateBooking = () => {
         if (user && user.email) {
-            handlePayment({ email: user.email });
+            handlePayment({ email: user.email, phone: profile?.phone, name: profile?.name });
         } else {
             guestForm.reset();
             setIsGuestModalOpen(true);
