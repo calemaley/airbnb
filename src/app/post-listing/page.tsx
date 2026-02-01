@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { addDoc, collection, serverTimestamp, UploadTask, getDownloadURL, ref, uploadBytesResumable } from "firebase/firestore"
-import { useFirestore, useUser, useStorage } from "@/firebase"
+import { addDoc, collection } from "firebase/firestore"
+import { useFirestore, useUser } from "@/firebase"
 import { suggestCategory } from "@/ai/flows/category-suggestion";
 import type { SuggestCategoryInput, SuggestCategoryOutput } from "@/ai/flows/category-suggestion";
 import Image from "next/image";
@@ -35,9 +35,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast"
 import { errorEmitter } from "@/firebase/error-emitter"
 import { FirestorePermissionError } from "@/firebase/errors"
-import { Loader2, Sparkles, Bot, PlusCircle, Trash2 } from "lucide-react";
+import { Loader2, Sparkles, Bot, PlusCircle, Trash2, Info } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Progress } from "@/components/ui/progress";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -408,9 +414,9 @@ export default function PostListingPage() {
                                             checked={field.value?.includes(item.id)}
                                             onCheckedChange={(checked) => {
                                             return checked
-                                                ? field.onChange([...field.value, item.id])
+                                                ? field.onChange([...(field.value || []), item.id])
                                                 : field.onChange(
-                                                    field.value?.filter(
+                                                    (field.value || [])?.filter(
                                                     (value) => value !== item.id
                                                     )
                                                 )
@@ -434,10 +440,53 @@ export default function PostListingPage() {
                     <FormItem>
                         <FormLabel className="text-lg">Image URLs</FormLabel>
                         <FormDescription>Paste direct links to your images below and click "Add URL". You can add multiple images.</FormDescription>
-                        <div className="flex gap-2">
+                        
+                        <Collapsible>
+                            <CollapsibleTrigger asChild>
+                                <Button variant="link" className="flex items-center gap-1 text-sm text-muted-foreground p-0 h-auto hover:text-primary">
+                                    <Info className="h-4 w-4" />
+                                    Need help getting an image URL?
+                                </Button>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="mt-2">
+                                <Alert variant="default">
+                                    <Info className="h-4 w-4" />
+                                    <AlertTitle className="font-bold">How to Get an Image URL</AlertTitle>
+                                    <AlertDescription>
+                                        <ol className="list-decimal list-inside space-y-2 mt-2">
+                                            <li>
+                                                Go to a free image hosting website like{' '}
+                                                <a href="https://imgbb.com/" target="_blank" rel="noopener noreferrer" className="underline font-semibold">
+                                                    imgbb.com
+                                                </a>.
+                                            </li>
+                                            <li>Upload a picture of your property.</li>
+                                            <li>
+                                                After uploading, the site will give you different link options. Look for the 'Direct link' that ends with <strong>.jpg</strong> or <strong>.png</strong>.
+                                            </li>
+                                            <li>
+                                                Sometimes you get a block of code like: <br />
+                                                <code className="text-xs bg-muted p-1 rounded-sm break-all">
+                                                    {'<a href="..."><img src="https://i.ibb.co/XfHP42Zv/airbnb3.jpg" ...></a>'}
+                                                </code>
+                                            </li>
+                                            <li>
+                                                You only need the URL from the <code className="text-xs bg-muted p-1 rounded-sm">src="..."</code> part. In the example above, that would be: <br />
+                                                <code className="text-xs bg-muted p-1 rounded-sm break-all">
+                                                    https://i.ibb.co/XfHP42Zv/airbnb3.jpg
+                                                </code>
+                                            </li>
+                                            <li>Copy that URL and paste it in the field below.</li>
+                                        </ol>
+                                    </AlertDescription>
+                                </Alert>
+                            </CollapsibleContent>
+                        </Collapsible>
+                        
+                        <div className="flex gap-2 pt-2">
                             <FormControl>
                                 <Input 
-                                    placeholder="https://i.ibb.co/6RrSLTFc/airbnb6.jpg"
+                                    placeholder="https://i.ibb.co/XfHP42Zv/airbnb3.jpg"
                                     value={currentImageUrl}
                                     onChange={(e) => setCurrentImageUrl(e.target.value)}
                                     disabled={isSubmitting}
@@ -470,7 +519,7 @@ export default function PostListingPage() {
 
 
                     <Button type="submit" size="lg" className="w-full md:w-auto" disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : "Submit Listing for Review"}
+                        {isSubmitting ?  <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Submitting...</> : "Submit Listing for Review"}
                     </Button>
                 </form>
                 </Form>
