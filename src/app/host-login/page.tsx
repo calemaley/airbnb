@@ -2,7 +2,7 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -21,11 +21,9 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required."),
 })
 
-export default function LoginPage() {
+export default function HostLoginPage() {
   const auth = useAuth()
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const redirectUrl = searchParams.get('redirect')
   const { toast } = useToast()
   
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -39,9 +37,9 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, values.email, values.password)
       toast({
         title: "Login Successful",
-        description: "Welcome back!",
+        description: "Welcome back, Host!",
       })
-      router.push(redirectUrl || "/my-bookings")
+      router.push("/dashboard")
     } catch (error: any) {
       console.error("Login failed:", error)
       toast({
@@ -56,9 +54,9 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-secondary">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Login</CardTitle>
+          <CardTitle className="font-headline text-3xl">Host Login</CardTitle>
           <CardDescription>
-            Access your account to view your bookings.
+            Access your dashboard to manage your listings.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -97,8 +95,8 @@ export default function LoginPage() {
             </form>
           </Form>
           <div className="mt-6 text-center text-sm">
-            Don't have an account?{" "}
-            <Link href="/signup" className="underline font-medium hover:text-primary">
+            Don't have a host account?{" "}
+            <Link href="/host-signup" className="underline font-medium hover:text-primary">
               Sign up
             </Link>
           </div>

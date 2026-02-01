@@ -25,7 +25,7 @@ const signupSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters."),
 })
 
-export default function SignupPage() {
+export default function HostSignupPage() {
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
@@ -57,7 +57,6 @@ export default function SignupPage() {
       
       const userDocRef = doc(firestore, "users", user.uid);
       
-      // Create user profile in Firestore without awaiting
       setDoc(userDocRef, userProfileData)
         .catch((serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -75,11 +74,11 @@ export default function SignupPage() {
         });
 
       toast({
-        title: "Registration Successful!",
-        description: "Welcome to StaysKenya! Your account is now active.",
+        title: "Host Registration Successful!",
+        description: "Welcome to StaysKenya! Let's get your listings set up.",
       });
 
-      router.push("/my-bookings");
+      router.push("/dashboard");
 
     } catch (error: any) {
       console.error("Signup failed:", error);
@@ -103,9 +102,9 @@ export default function SignupPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-secondary py-12">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Create an Account</CardTitle>
+          <CardTitle className="font-headline text-3xl">Become a Host</CardTitle>
           <CardDescription>
-            Sign up to book stays and manage your trips.
+            Create an account to start listing your properties.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -153,13 +152,13 @@ export default function SignupPage() {
 
               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create Account
+                Create Host Account
               </Button>
             </form>
           </Form>
           <div className="mt-6 text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="underline font-medium hover:text-primary">
+            Already have a host account?{" "}
+            <Link href="/host-login" className="underline font-medium hover:text-primary">
               Log in
             </Link>
           </div>

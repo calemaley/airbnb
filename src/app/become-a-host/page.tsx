@@ -59,7 +59,7 @@ export default function BecomeAHostPage() {
             </CardContent>
             <CardFooter>
                <Button variant="outline" className="w-full" asChild>
-                    <Link href="/signup">
+                    <Link href="/host-signup">
                         Get Started <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
@@ -87,7 +87,7 @@ export default function BecomeAHostPage() {
             </CardContent>
             <CardFooter>
                 <Button className="w-full" asChild>
-                    <Link href="/signup">
+                    <Link href="/host-signup">
                         Go Premium <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
@@ -137,7 +137,7 @@ export default function BecomeAHostPage() {
         </div>
         
         <div className="text-center mt-16">
-            <p className="text-muted-foreground">Have an account? <Link href="/login" className="text-primary font-medium hover:underline">Log in to manage your listings.</Link></p>
+            <p className="text-muted-foreground">Have an account? <Link href="/host-login" className="text-primary font-medium hover:underline">Log in to manage your listings.</Link></p>
         </div>
       </div>
     </div>
