@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState } from "react";
@@ -6,10 +5,10 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { addDoc, collection } from "firebase/firestore"
-import { useFirestore, useUser, useStorage } from "@/firebase"
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { useFirestore, useUser } from "@/firebase"
 import { suggestCategory } from "@/ai/flows/category-suggestion";
 import type { SuggestCategoryInput, SuggestCategoryOutput } from "@/ai/flows/category-suggestion";
+import Image from "next/image";
 
 
 import { Button } from "@/components/ui/button"
@@ -36,8 +35,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast"
 import { errorEmitter } from "@/firebase/error-emitter"
 import { FirestorePermissionError } from "@/firebase/errors"
-import { Loader2, Sparkles, Bot } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import { Loader2, Sparkles, Bot, PlusCircle, Trash2 } from "lucide-react";
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -62,11 +60,10 @@ const formSchema = z.object({
 export default function PostListingPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
-  const storage = useStorage();
   const { user } = useUser();
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [currentImageUrl, setCurrentImageUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [aiDescription, setAiDescription] = useState("");
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -83,11 +80,27 @@ export default function PostListingPage() {
     },
   })
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        setImageFiles(Array.from(e.target.files));
+  const handleAddImageUrl = () => {
+    if (currentImageUrl && !imageUrls.includes(currentImageUrl)) {
+      try {
+        // Basic URL validation
+        new URL(currentImageUrl);
+        setImageUrls([...imageUrls, currentImageUrl]);
+        setCurrentImageUrl("");
+      } catch (_) {
+        toast({
+          variant: "destructive",
+          title: "Invalid URL",
+          description: "Please enter a valid image URL.",
+        });
+      }
     }
   };
+
+  const handleRemoveImageUrl = (urlToRemove: string) => {
+    setImageUrls(imageUrls.filter(url => url !== urlToRemove));
+  };
+
 
   const handleSuggestCategory = async () => {
     if (!aiDescription) {
@@ -123,7 +136,7 @@ export default function PostListingPage() {
 
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!firestore || !user || !storage) {
+    if (!firestore || !user) {
       toast({
         variant: "destructive",
         title: "Authentication Error",
@@ -132,40 +145,14 @@ export default function PostListingPage() {
       return;
     }
 
-    if (imageFiles.length === 0) {
-        toast({ variant: "destructive", title: "Images Required", description: "Please upload at least one image for your listing." });
+    if (imageUrls.length === 0) {
+        toast({ variant: "destructive", title: "Images Required", description: "Please add at least one image URL." });
         return;
     }
 
     setIsSubmitting(true);
-    setUploadProgress(0);
     
     try {
-      const totalSize = imageFiles.reduce((acc, file) => acc + file.size, 0);
-      const progressByFile: { [key: string]: number } = {};
-
-      const uploadPromises = imageFiles.map(file => {
-        const fileRef = ref(storage, `listings/${user.uid}/${Date.now()}_${file.name}`);
-        const uploadTask = uploadBytesResumable(fileRef, file);
-
-        return new Promise((resolve, reject) => {
-          uploadTask.on('state_changed',
-            (snapshot) => {
-                progressByFile[file.name] = snapshot.bytesTransferred;
-                const totalTransferred = Object.values(progressByFile).reduce((acc, bytes) => acc + bytes, 0);
-                setUploadProgress((totalTransferred / totalSize) * 100);
-            },
-            (error) => reject(error),
-            async () => {
-                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                resolve(downloadURL);
-            }
-          );
-        });
-      });
-
-      const imageUrls = await Promise.all(uploadPromises);
-    
       const newListingData = {
         ...values,
         userId: user.uid,
@@ -192,28 +179,18 @@ export default function PostListingPage() {
       });
 
       form.reset();
-      setImageFiles([]);
-      setUploadProgress(0);
-      const fileInput = document.getElementById('images') as HTMLInputElement;
-      if(fileInput) fileInput.value = '';
+      setImageUrls([]);
+      setCurrentImageUrl("");
 
     } catch(error: any) {
         console.error("Submission process failed:", error);
-        let description = "Could not submit your listing. Please try again.";
-        if (error.code === 'storage/retry-limit-exceeded') {
-          description = "Image upload timed out. Please check your internet connection or try again with smaller files.";
-        } else {
-          description = error.message || description;
-        }
-
         toast({
           variant: "destructive",
           title: "Submission Failed",
-          description: description,
+          description: error.message || "Could not submit your listing. Please try again.",
         });
     } finally {
         setIsSubmitting(false);
-        setUploadProgress(0);
     }
   }
 
@@ -389,20 +366,42 @@ export default function PostListingPage() {
                     />
 
                     <FormItem>
-                        <FormLabel className="text-lg">Upload Images</FormLabel>
-                        <FormControl>
-                            <Input id="images" type="file" multiple accept="image/*" onChange={handleFileChange} disabled={isSubmitting}/>
-                        </FormControl>
-                        <FormDescription>Select one or more images for your listing.</FormDescription>
+                        <FormLabel className="text-lg">Image URLs</FormLabel>
+                        <FormDescription>Paste direct links to your images below and click "Add URL". You can add multiple images.</FormDescription>
+                        <div className="flex gap-2">
+                            <FormControl>
+                                <Input 
+                                    placeholder="https://i.ibb.co/6RrSLTFc/airbnb6.jpg"
+                                    value={currentImageUrl}
+                                    onChange={(e) => setCurrentImageUrl(e.target.value)}
+                                    disabled={isSubmitting}
+                                />
+                            </FormControl>
+                            <Button type="button" onClick={handleAddImageUrl} disabled={!currentImageUrl || isSubmitting}>
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add URL
+                            </Button>
+                        </div>
+                        
+                        {imageUrls.length > 0 && (
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pt-4">
+                                {imageUrls.map((url, index) => (
+                                    <div key={index} className="relative group aspect-square">
+                                        <Image src={url} alt={`Listing image ${index + 1}`} fill className="object-cover rounded-md border" />
+                                        <Button 
+                                            type="button"
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute top-2 right-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            onClick={() => handleRemoveImageUrl(url)}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </FormItem>
 
-                     {isSubmitting && (
-                        <div className="space-y-2">
-                            <FormLabel>Uploading Images...</FormLabel>
-                            <Progress value={uploadProgress} className="w-full" />
-                            <p className="text-sm text-muted-foreground">{Math.round(uploadProgress)}% complete</p>
-                        </div>
-                    )}
 
                     <Button type="submit" size="lg" className="w-full md:w-auto" disabled={isSubmitting}>
                         {isSubmitting ? "Submitting..." : "Submit Listing for Review"}
