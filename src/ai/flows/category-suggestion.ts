@@ -11,14 +11,14 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const SuggestCategoryInputSchema = z.object({
+const SuggestCategoryInputSchema = z.object({
   description: z.string().describe('A description of the property.'),
 });
 export type SuggestCategoryInput = z.infer<typeof SuggestCategoryInputSchema>;
 
 const CategoryEnum = z.enum(['Budget', 'Mid-range', 'Luxury']);
 
-export const SuggestCategoryOutputSchema = z.object({
+const SuggestCategoryOutputSchema = z.object({
   category: CategoryEnum.describe(
     'The suggested category for the property. Must be one of "Budget", "Mid-range", or "Luxury".'
   ),
