@@ -116,9 +116,15 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
   }, [listing, form, user, userLoading, router, toast]);
 
   const handleAddImageUrl = () => {
-    if (currentImageUrl && !imageUrls.includes(currentImageUrl)) {
+    if (currentImageUrl && currentImageUrl.startsWith('http') && !imageUrls.includes(currentImageUrl)) {
       setImageUrls([...imageUrls, currentImageUrl]);
       setCurrentImageUrl("");
+    } else if (currentImageUrl && !currentImageUrl.startsWith('http')) {
+        toast({
+            variant: "destructive",
+            title: "Invalid Image URL",
+            description: "Please provide a valid web URL (starting with http:// or https://). Local file paths are not supported."
+        });
     }
   };
 
