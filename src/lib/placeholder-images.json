@@ -2,27 +2,27 @@
   "placeholderImages": [
     {
       "id": "hero-1",
-      "description": "Scenic view of Kenyan savannah at sunset",
-      "imageUrl": "https://images.unsplash.com/photo-1678019032053-69ef34700798?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxrZW55YSUyMGxhbmRzY2FwZXxlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=100&w=1920",
-      "imageHint": "kenya landscape"
+      "description": "A bright and modern living room",
+      "imageUrl": "https://i.ibb.co/xqQCVPgY/pexels-curtis-adams-1694007-4469186.jpg",
+      "imageHint": "modern interior"
     },
     {
       "id": "hero-2",
-      "description": "Luxury safari tent interior",
-      "imageUrl": "https://images.unsplash.com/photo-1604593923579-a49209564489?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBzYWZhcmklMjB0ZW50fGVufDB8fHx8MTc2ODIyMjQwN3ww&ixlib=rb-4.1.0&q=100&w=1920",
-      "imageHint": "luxury safari"
+      "description": "A stylish and comfortable bedroom",
+      "imageUrl": "https://i.ibb.co/VcVSTkZK/pexels-curtis-adams-1694007-7601261.jpg",
+      "imageHint": "stylish bedroom"
     },
     {
       "id": "hero-3",
-      "description": "Infinity pool overlooking a valley in Kenya",
-      "imageUrl": "https://images.unsplash.com/photo-1615880144557-96860275a681?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxrZW55YSUyMGx1eHVyeSUyMGhvdGVsfGVufDB8fHx8MTc2ODIyMjQwN3ww&ixlib=rb-4.1.0&q=100&w=1920",
-      "imageHint": "kenya luxury"
+      "description": "A bedroom with a scenic outdoor view",
+      "imageUrl": "https://i.ibb.co/jvPs1VsJ/pexels-bertellifotografia-13870637.jpg",
+      "imageHint": "bedroom view"
     },
     {
       "id": "hero-4",
-      "description": "Cozy living room with a fireplace in a Kenyan home",
-      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6164a83639?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb3p5JTIwaG9tZSUyMGZpcmVwbGFjZXxlbnwwfHx8fDE3NjgyMjI0MDd8MA&ixlib=rb-4.1.0&q=100&w=1920",
-      "imageHint": "cozy home"
+      "description": "A modern kitchen and dining area",
+      "imageUrl": "https://i.ibb.co/hFBq6d1Q/pexels-8pcarlos-morocho-2150734957-35509818.jpg",
+      "imageHint": "modern kitchen"
     },
     {
       "id": "listing-1",
