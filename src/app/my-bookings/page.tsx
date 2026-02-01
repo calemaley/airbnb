@@ -4,7 +4,7 @@ import { useUser, useFirestore, useCollection } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { Loader2, CalendarX2 } from 'lucide-react';
-import { collection, query, where, orderBy } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import type { Booking } from '@/lib/types';
 import { BookingItem } from '@/components/dashboard/BookingItem';
 
@@ -23,12 +23,17 @@ export default function MyBookingsPage() {
     if (!user || !firestore) return null;
     return query(
         collection(firestore, 'bookings'), 
-        where('guestId', '==', user.uid),
-        orderBy('checkInDate', 'desc')
+        where('guestId', '==', user.uid)
     );
   }, [user, firestore]);
 
-  const { data: bookings, loading: bookingsLoading } = useCollection<Booking>(bookingsQuery);
+  const { data: bookingsData, loading: bookingsLoading } = useCollection<Booking>(bookingsQuery);
+
+  const bookings = useMemo(() => {
+    if (!bookingsData) return [];
+    return [...bookingsData].sort((a,b) => new Date(b.checkInDate).getTime() - new Date(a.checkInDate).getTime());
+  }, [bookingsData]);
+
 
   if (loading || bookingsLoading) {
     return (

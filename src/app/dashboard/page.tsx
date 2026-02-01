@@ -14,7 +14,7 @@ import {
 import { Loader2, LogOut, Trash2, Pencil, CalendarX2 } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import Link from 'next/link';
-import { collection, query, where, doc, deleteDoc, orderBy } from 'firebase/firestore';
+import { collection, query, where, doc, deleteDoc } from 'firebase/firestore';
 import type { Accommodation, Booking } from '@/lib/types';
 import { AccommodationCard } from '@/components/listings/AccommodationCard';
 import {
@@ -53,11 +53,16 @@ export default function DashboardPage() {
     if (!user || !firestore) return null;
     return query(
         collection(firestore, 'bookings'), 
-        where('hostId', '==', user.uid),
-        orderBy('checkInDate', 'desc')
+        where('hostId', '==', user.uid)
     );
   }, [user, firestore]);
-  const { data: hostBookings, loading: bookingsLoading } = useCollection<Booking>(hostBookingsQuery);
+  const { data: hostBookingsData, loading: bookingsLoading } = useCollection<Booking>(hostBookingsQuery);
+
+  const hostBookings = useMemo(() => {
+    if (!hostBookingsData) return [];
+    return [...hostBookingsData].sort((a, b) => new Date(b.checkInDate).getTime() - new Date(a.checkInDate).getTime());
+  }, [hostBookingsData]);
+
 
   const handleLogout = async () => {
     const auth = getAuth();
