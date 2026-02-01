@@ -3,6 +3,8 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { addDoc, collection } from "firebase/firestore"
+import { useFirestore, useUser } from "@/firebase"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -26,7 +28,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
-import { postListingAction } from "./actions"
+import { errorEmitter } from "@/firebase/error-emitter"
+import { FirestorePermissionError } from "@/firebase/errors"
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -50,6 +53,8 @@ const formSchema = z.object({
 
 export default function PostListingPage() {
   const { toast } = useToast();
+  const firestore = useFirestore();
+  const { user } = useUser();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,21 +69,52 @@ export default function PostListingPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const result = await postListingAction(values);
-
-    if (result.success) {
-      toast({
-        title: "Listing Submitted!",
-        description: "Your listing has been submitted for admin approval. Thank you!",
-      });
-      form.reset();
-    } else {
+    if (!firestore || !user) {
       toast({
         variant: "destructive",
-        title: "Submission Failed",
-        description: result.error,
+        title: "Authentication Error",
+        description: "You must be logged in to post a listing.",
       });
+      return;
     }
+
+    form.control.register('name', { disabled: true });
+    
+    const newListingData = {
+      ...values,
+      userId: user.uid,
+      rating: 0,
+      images: [], // Placeholder for future implementation
+      reviews: [],
+    };
+    
+    const listingsCollection = collection(firestore, "listings");
+
+    addDoc(listingsCollection, newListingData)
+      .then(() => {
+        toast({
+          title: "Listing Submitted!",
+          description: "Your listing has been submitted and is now live!",
+        });
+        form.reset();
+      })
+      .catch((serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: listingsCollection.path,
+          operation: 'create',
+          requestResourceData: newListingData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        
+        toast({
+          variant: "destructive",
+          title: "Submission Failed",
+          description: serverError.message || "Could not submit your listing.",
+        });
+      })
+      .finally(() => {
+        form.control.register('name', { disabled: false });
+      });
   }
 
   return (

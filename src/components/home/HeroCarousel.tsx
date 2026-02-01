@@ -1,24 +1,49 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { getAllListings } from '@/lib/data';
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { useCollection, useFirestore } from '@/firebase';
+import { collection, query, where, limit } from 'firebase/firestore';
+import type { Accommodation } from '@/lib/types';
+import { Skeleton } from '../ui/skeleton';
 
 export default function HeroCarousel() {
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
   );
 
-  const premiumListings = getAllListings().filter(listing => listing.category === 'Luxury');
-  const premiumImageIds = premiumListings.map(listing => listing.images[0]);
+  const firestore = useFirestore();
+    
+  const premiumListingsQuery = useMemo(() => {
+      if (!firestore) return null;
+      return query(
+          collection(firestore, 'listings'), 
+          where('category', '==', 'Luxury'),
+          limit(4)
+      );
+  }, [firestore]);
+
+  const { data: premiumListings, loading } = useCollection<Accommodation>(premiumListingsQuery);
+
+  const premiumImageIds = useMemo(() => {
+      return premiumListings?.map(listing => listing.images[0]).filter(Boolean) || [];
+  }, [premiumListings]);
+  
   const carouselImages = PlaceHolderImages.filter(p => premiumImageIds.includes(p.id));
+
+  if (loading) {
+    return <Skeleton className="absolute inset-0 w-full h-full" />;
+  }
+
+  // Fallback to default hero images if no premium listings with images are found
+  const displayImages = carouselImages.length > 0 ? carouselImages : PlaceHolderImages.filter(p => p.id.startsWith('hero-'));
 
   return (
     <Carousel
@@ -27,7 +52,7 @@ export default function HeroCarousel() {
       opts={{ loop: true }}
     >
       <CarouselContent>
-        {carouselImages.map((image, index) => (
+        {displayImages.map((image, index) => (
           <CarouselItem key={image.id}>
             <div className="relative h-[60vh] md:h-[70vh] w-full">
               <Image

@@ -1,9 +1,6 @@
 import AllListings from '@/components/listings/AllListings';
-import { getAllListings } from '@/lib/data';
 
 export default function ListingsPage() {
-  const listings = getAllListings();
-
   return (
     <div>
       <div className="bg-secondary">
@@ -12,7 +9,7 @@ export default function ListingsPage() {
             <p className="mt-2 text-lg text-secondary-foreground max-w-2xl mx-auto">Find the perfect spot for your next Kenyan adventure, from budget-friendly rooms to luxurious villas.</p>
         </div>
       </div>
-      <AllListings listings={listings} />
+      <AllListings />
     </div>
   );
 }

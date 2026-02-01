@@ -1,35 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Accommodation } from '@/lib/types';
 import { AccommodationCard } from './AccommodationCard';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
-
-interface AllListingsProps {
-  listings: Accommodation[];
-}
+import { useCollection, useFirestore } from '@/firebase';
+import { collection, query } from 'firebase/firestore';
+import { Loader2 } from 'lucide-react';
+import { Skeleton } from '../ui/skeleton';
 
 const MAX_PRICE = 50000;
 
-export default function AllListings({ listings }: AllListingsProps) {
+export default function AllListings() {
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('all');
   const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
 
-  const filteredListings = listings.filter((listing) => {
-    const matchesSearch =
-      listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = category === 'all' || listing.category === category;
-    const matchesPrice =
-      listing.pricePerNight >= priceRange[0] &&
-      (priceRange[1] === MAX_PRICE ? true : listing.pricePerNight <= priceRange[1]);
+  const firestore = useFirestore();
+  const listingsQuery = useMemo(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'listings'));
+  }, [firestore]);
+
+  const { data: listings, loading, error } = useCollection<Accommodation>(listingsQuery);
+
+  const filteredListings = useMemo(() => {
+    if (!listings) return [];
     
-    return matchesSearch && matchesCategory && matchesPrice;
-  });
+    return listings.filter((listing) => {
+      const matchesSearch =
+        listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        listing.location.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = category === 'all' || listing.category === category;
+      const matchesPrice =
+        listing.pricePerNight >= priceRange[0] &&
+        (priceRange[1] === MAX_PRICE ? true : listing.pricePerNight <= priceRange[1]);
+      
+      return matchesSearch && matchesCategory && matchesPrice;
+    });
+  }, [listings, searchTerm, category, priceRange]);
 
   const resetFilters = () => {
     setSearchTerm('');
@@ -93,17 +105,32 @@ export default function AllListings({ listings }: AllListingsProps) {
 
         {/* Listings Grid */}
         <main className="md:col-span-3">
-          {filteredListings.length > 0 ? (
+          {loading && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton className="h-80 w-full" key={i} />
+              ))}
+            </div>
+          )}
+          {!loading && error && (
+            <div className="text-center py-16">
+              <h3 className="font-headline text-2xl font-bold text-destructive">Error Loading Listings</h3>
+              <p className="text-muted-foreground mt-2">Could not fetch listings. Please try again later.</p>
+            </div>
+          )}
+          {!loading && !error && filteredListings.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredListings.map((listing) => (
                 <AccommodationCard key={listing.id} listing={listing} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-16">
-              <h3 className="font-headline text-2xl font-bold">No Listings Found</h3>
-              <p className="text-muted-foreground mt-2">Try adjusting your filters to find what you're looking for.</p>
-            </div>
+            !loading && !error && (
+              <div className="text-center py-16">
+                <h3 className="font-headline text-2xl font-bold">No Listings Found</h3>
+                <p className="text-muted-foreground mt-2">Try adjusting your filters to find what you're looking for.</p>
+              </div>
+            )
           )}
         </main>
       </div>

@@ -19,5 +19,15 @@ service cloud.firestore {
       allow read;
       allow create, update: if isSignedIn() && isOwner(userId);
     }
+
+    // LISTINGS
+    match /listings/{listingId} {
+      // Anyone can view listings
+      allow read;
+      // Users can create listings for themselves
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      // The owner of a listing can update or delete it
+      allow update, delete: if isSignedIn() && isOwner(resource.data.userId);
+    }
   }
 }

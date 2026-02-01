@@ -18,11 +18,12 @@ export interface Accommodation {
   pricePerNight: number;
   description: string;
   images: string[];
-  amenities: Amenity[];
+  amenities: (Amenity | string)[];
   rating: number;
   reviews: Review[];
-  host: {
+  host?: {
     name: string;
     avatar: string;
   };
+  userId?: string;
 }

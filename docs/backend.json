@@ -16,6 +16,56 @@
         }
       },
       "required": ["name", "email"]
+    },
+    "Listing": {
+      "title": "Listing",
+      "description": "Represents an accommodation listing.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who created the listing."
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "pricePerNight": {
+          "type": "number"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Budget", "Mid-range", "Luxury"]
+        },
+        "amenities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "images": {
+           "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Array of image placeholder IDs."
+        },
+        "rating": {
+            "type": "number"
+        },
+        "reviews": {
+            "type": "array",
+            "items": {
+                "type": "object"
+            }
+        }
+      },
+      "required": ["userId", "name", "location", "pricePerNight", "category", "description"]
     }
   },
   "auth": {
@@ -27,6 +77,12 @@
         "$ref": "#/entities/UserProfile"
       },
       "description": "Stores public profile information for each user."
+    },
+    "/listings/{listingId}": {
+      "schema": {
+        "$ref": "#/entities/Listing"
+      },
+      "description": "Stores all accommodation listings."
     }
   }
 }
