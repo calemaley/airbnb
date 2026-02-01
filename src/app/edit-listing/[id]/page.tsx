@@ -38,6 +38,7 @@ import { errorEmitter } from "@/firebase/error-emitter"
 import { FirestorePermissionError } from "@/firebase/errors"
 import { Loader2, Sparkles, Bot, PlusCircle, Trash2 } from "lucide-react";
 import type { Accommodation } from "@/lib/types";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -46,6 +47,8 @@ const amenities = [
   { id: 'kitchen', label: 'Full Kitchen' },
   { id: 'ac', label: 'Air Conditioning' },
   { id: 'tv', label: 'Television' },
+  { id: 'hot-shower', label: 'Hot Shower' },
+  { id: 'netflix', label: 'Netflix' },
 ] as const;
 
 const formSchema = z.object({
@@ -53,6 +56,7 @@ const formSchema = z.object({
   location: z.string().min(3, "Location is required."),
   description: z.string().min(20, "Description must be at least 20 characters long.").max(5000, "Description must be 5000 characters or less."),
   pricePerNight: z.coerce.number().min(1000, "Price must be at least KES 1000."),
+  priceType: z.enum(["Fixed", "Negotiable"]),
   category: z.enum(["Budget", "Mid-range", "Luxury"]),
   amenities: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one amenity.",
@@ -85,6 +89,7 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
       location: "",
       description: "",
       pricePerNight: 5000,
+      priceType: "Fixed",
       category: "Mid-range",
       amenities: [],
     },
@@ -275,6 +280,36 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
                             )}
                         />
                     </div>
+                     <FormField
+                        control={form.control}
+                        name="priceType"
+                        render={({ field }) => (
+                            <FormItem className="space-y-3">
+                                <FormLabel className="text-lg">Price Type</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                    className="flex items-center space-x-4"
+                                    >
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="Fixed" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Fixed</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="Negotiable" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Negotiable</FormLabel>
+                                    </FormItem>
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
                     <FormField
                     control={form.control}

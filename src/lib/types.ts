@@ -1,4 +1,4 @@
-export type Amenity = 'wifi' | 'pool' | 'parking' | 'kitchen' | 'ac' | 'tv';
+export type Amenity = 'wifi' | 'pool' | 'parking' | 'kitchen' | 'ac' | 'tv' | 'hot-shower' | 'netflix';
 
 export type Category = 'Budget' | 'Mid-range' | 'Luxury';
 
@@ -16,6 +16,7 @@ export interface Accommodation {
   location: string;
   category: Category;
   pricePerNight: number;
+  priceType: 'Fixed' | 'Negotiable';
   description: string;
   images: string[];
   amenities: (Amenity | string)[];

@@ -25,7 +25,8 @@ import {
   Waves,
   Loader2,
   AlertCircle,
-  PartyPopper,
+  ShowerHead,
+  Clapperboard,
 } from 'lucide-react';
 import type { Amenity, Accommodation, Booking } from '@/lib/types';
 import { Input } from '@/components/ui/input';
@@ -39,6 +40,7 @@ import { format, differenceInCalendarDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 
 const amenityIcons: Record<Amenity, React.ReactNode> = {
   wifi: <Wifi className="h-5 w-5 mr-2" />,
@@ -47,6 +49,8 @@ const amenityIcons: Record<Amenity, React.ReactNode> = {
   kitchen: <Utensils className="h-5 w-5 mr-2" />,
   ac: <Wind className="h-5 w-5 mr-2" />,
   tv: <Tv className="h-5 w-5 mr-2" />,
+  'hot-shower': <ShowerHead className="h-5 w-5 mr-2" />,
+  netflix: <Clapperboard className="h-5 w-5 mr-2" />,
 };
 const amenityLabels: Record<Amenity, string> = {
   wifi: 'Wi-Fi',
@@ -55,6 +59,8 @@ const amenityLabels: Record<Amenity, string> = {
   kitchen: 'Full Kitchen',
   ac: 'Air Conditioning',
   tv: 'Television',
+  'hot-shower': 'Hot Shower',
+  netflix: 'Netflix',
 };
 
 export default function ListingDetailPage({ params }: { params: { id: string } }) {
@@ -252,9 +258,10 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
         <div className="lg:col-span-1">
           <Card className="sticky top-24 shadow-lg">
             <CardHeader>
-              <CardTitle className="text-2xl">
+              <CardTitle className="text-2xl flex items-center">
                 <span className="font-bold">KES {listing.pricePerNight.toLocaleString()}</span>
                 <span className="text-base font-normal text-muted-foreground"> / night</span>
+                 {listing.priceType && <Badge variant="secondary" className="ml-2">{listing.priceType}</Badge>}
               </CardTitle>
               <CardDescription>
                 <Rating rating={listing.rating} size={16}/>

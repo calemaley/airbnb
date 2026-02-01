@@ -38,6 +38,10 @@
         "pricePerNight": {
           "type": "number"
         },
+        "priceType": {
+          "type": "string",
+          "enum": ["Fixed", "Negotiable"]
+        },
         "category": {
           "type": "string",
           "enum": ["Budget", "Mid-range", "Luxury"]
@@ -65,7 +69,7 @@
             }
         }
       },
-      "required": ["userId", "name", "location", "pricePerNight", "category", "description"]
+      "required": ["userId", "name", "location", "pricePerNight", "priceType", "category", "description"]
     },
     "Booking": {
       "title": "Booking",
