@@ -52,28 +52,31 @@ export default function HeroCarousel() {
   const displayImages = carouselImages.length > 0 ? carouselImages : defaultImages;
 
   return (
-    <Carousel
-      className="absolute inset-0 w-full h-full"
-      plugins={[plugin.current]}
-      opts={{ loop: true }}
-    >
-      <CarouselContent>
-        {displayImages.map((image, index) => (
-          <CarouselItem key={image.id}>
-            <div className="relative h-[60vh] md:h-[70vh] w-full">
-              <Image
-                src={image.imageUrl}
-                alt={image.description}
-                data-ai-hint={image.imageHint}
-                fill
-                className="object-cover"
-                priority={index === 0}
-                quality={100}
-              />
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+    <div className="absolute inset-0 w-full h-full">
+        <Carousel
+        className="w-full h-full"
+        plugins={[plugin.current]}
+        opts={{ loop: true }}
+        >
+        <CarouselContent>
+            {displayImages.map((image, index) => (
+            <CarouselItem key={image.id}>
+                <div className="relative h-[60vh] md:h-[70vh] w-full">
+                <Image
+                    src={image.imageUrl}
+                    alt={image.description}
+                    data-ai-hint={image.imageHint}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                    quality={100}
+                />
+                </div>
+            </CarouselItem>
+            ))}
+        </CarouselContent>
+        </Carousel>
+        <div className="absolute inset-0 bg-black/50" />
+    </div>
   );
 }

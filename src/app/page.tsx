@@ -27,7 +27,6 @@ export default function Home() {
     <div className="flex flex-col gap-16 md:gap-24">
       <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white">
         <HeroCarousel />
-        <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 container px-4">
           <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-white drop-shadow-2xl">
             Find Airbnbs & Guest Rooms in Meru
