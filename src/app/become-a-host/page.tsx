@@ -59,9 +59,9 @@ export default function BecomeAHostPage() {
             </CardContent>
             <CardFooter>
                <Button variant="outline" className="w-full" asChild>
-                    <Link href="/host-signup">
+                    <a href="https://paystack.shop/pay/Stays" target="_blank" rel="noopener noreferrer">
                         Get Started <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
+                    </a>
                 </Button>
             </CardFooter>
           </Card>
@@ -87,9 +87,9 @@ export default function BecomeAHostPage() {
             </CardContent>
             <CardFooter>
                 <Button className="w-full" asChild>
-                    <Link href="/host-signup">
+                    <a href="https://paystack.shop/pay/StaysKenya" target="_blank" rel="noopener noreferrer">
                         Go Premium <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
+                    </a>
                 </Button>
             </CardFooter>
           </Card>
