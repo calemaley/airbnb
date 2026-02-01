@@ -50,12 +50,7 @@ export default function Header() {
                 </>
               ) : (
                 <>
-                  <Button variant="ghost" asChild>
-                    <Link href="/login">Log In</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link href="/signup">Sign Up</Link>
-                  </Button>
+                  {/* Login/Signup buttons removed to favor contextual login from actions like "Reserve" or "Become a Host" */}
                 </>
               )}
             </>
@@ -78,12 +73,16 @@ export default function Header() {
             <Link href="/listings" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Explore Listings</Link>
             <Link href="/become-a-host" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Become a Host</Link>
             <Link href="/about" className="font-medium text-lg" onClick={() => setIsOpen(false)}>About StaysKenya</Link>
-             {user && (
+             {user ? (
               <>
                 <Link href="/my-bookings" className="font-medium text-lg" onClick={() => setIsOpen(false)}>My Bookings</Link>
                 <Link href="/dashboard" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Dashboard</Link>
               </>
-            )}
+             ) : (
+              <div className='border-t pt-4 mt-2 flex flex-col gap-4'>
+                  <Button asChild onClick={() => setIsOpen(false)}><Link href="/login">Log In</Link></Button>
+              </div>
+             )}
           </div>
         </div>
       )}

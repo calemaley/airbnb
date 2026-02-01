@@ -103,9 +103,9 @@ export default function SignupPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-secondary py-12">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Become a Host</CardTitle>
+          <CardTitle className="font-headline text-3xl">Create an Account</CardTitle>
           <CardDescription>
-            Create an account to start listing your property.
+            Sign up to book stays and manage your listings.
           </CardDescription>
         </CardHeader>
         <CardContent>

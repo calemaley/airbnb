@@ -53,9 +53,9 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-secondary">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Host Login</CardTitle>
+          <CardTitle className="font-headline text-3xl">Login</CardTitle>
           <CardDescription>
-            Access your host dashboard to manage your listings.
+            Access your account to continue.
           </CardDescription>
         </CardHeader>
         <CardContent>
