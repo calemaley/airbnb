@@ -1,12 +1,13 @@
+
 'use client';
 
-import { Suspense, useMemo, useState, useEffect } from 'react';
+import { Suspense, useMemo, useState, useEffect, use } from 'react';
 import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import { useDoc, useFirestore, useUser } from '@/firebase';
 import { doc, addDoc, collection } from 'firebase/firestore';
 import type { Accommodation } from '@/lib/types';
 import { differenceInCalendarDays, format, parseISO } from 'date-fns';
-import { Loader2, Calendar, Users, BedDouble, Mail, MapPin } from 'lucide-react';
+import { Loader2, Calendar, Users, BedDouble, Mail, MapPin, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -22,7 +23,7 @@ function BookPageContents() {
     const firestore = useFirestore();
     const { user, loading: userLoading } = useUser();
     const { toast } = useToast();
-    const [isConfirming, setIsConfirming] = useState(false);
+    const [isProcessingBooking, setIsProcessingBooking] = useState(false);
 
     const listingId = searchParams.get('listingId');
     const checkInStr = searchParams.get('checkIn');
@@ -47,19 +48,19 @@ function BookPageContents() {
     const totalCost = listing ? listing.pricePerNight * numberOfNights : 0;
     const imageUrl = listing?.images?.[0];
 
-    const handleConfirmBooking = async () => {
+    const handleConfirmBooking = () => {
         if (!user) {
             const currentPath = `/book?listingId=${listingId}&checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guestsStr}`;
             router.push('/login?redirect=' + encodeURIComponent(currentPath));
             return;
         }
 
-        if (!listing || !firestore) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Listing data is missing.' });
+        if (!listing || !firestore || !checkInDate || !checkOutDate) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Booking data is missing.' });
             return;
         }
-
-        setIsConfirming(true);
+        
+        setIsProcessingBooking(true);
 
         const newBooking = {
             listingId: listing.id,
@@ -72,34 +73,30 @@ function BookPageContents() {
             status: 'confirmed' as const,
         };
 
-        try {
-            const bookingsCollection = collection(firestore, 'bookings');
-            await addDoc(bookingsCollection, newBooking).catch((serverError) => {
+        const bookingsCollection = collection(firestore, 'bookings');
+        addDoc(bookingsCollection, newBooking)
+            .then(() => {
+                toast({
+                    title: 'Booking Confirmed!',
+                    description: `Your booking for ${listing.name} is confirmed.`,
+                });
+                router.push('/my-bookings');
+            })
+            .catch((serverError) => {
                 const permissionError = new FirestorePermissionError({
                     path: 'bookings',
                     operation: 'create',
                     requestResourceData: newBooking,
                 });
                 errorEmitter.emit('permission-error', permissionError);
-                throw serverError; // Re-throw to be caught by outer try-catch
+                toast({
+                    variant: 'destructive',
+                    title: 'Booking Failed',
+                    description: 'We could not save your booking. Please try again.',
+                });
+            }).finally(() => {
+                setIsProcessingBooking(false);
             });
-
-            toast({
-                title: 'Booking Confirmed!',
-                description: `Your booking for ${listing.name} is confirmed.`,
-            });
-            
-            router.push('/my-bookings');
-
-        } catch (error: any) {
-            console.error('Booking confirmation failed:', error);
-            toast({
-                variant: 'destructive',
-                title: 'Confirmation Failed',
-                description: error.message || 'Could not confirm your booking. Please try again.',
-            });
-            setIsConfirming(false);
-        }
     };
 
 
@@ -112,7 +109,7 @@ function BookPageContents() {
     }
     
     if (!listing) {
-        return notFound();
+        notFound();
     }
 
     return (
@@ -171,8 +168,8 @@ function BookPageContents() {
                         </CardContent>
                         <CardFooter className="bg-muted/50 p-6 flex-col sm:flex-row items-center justify-between">
                             <p className="text-sm text-muted-foreground mb-4 sm:mb-0">By confirming, you agree to the <Link href="/terms-of-service" className="underline" target="_blank">Terms of Service</Link>.</p>
-                             <Button size="lg" onClick={handleConfirmBooking} disabled={isConfirming}>
-                                {isConfirming ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Confirming...</> : 'Confirm & Book'}
+                             <Button size="lg" onClick={handleConfirmBooking} disabled={isProcessingBooking || totalCost <= 0 || (user && user.uid === listing.userId)}>
+                                {isProcessingBooking ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Processing...</> : <><CheckCircle className="mr-2 h-4 w-4" />Confirm Booking</>}
                             </Button>
                         </CardFooter>
                     </Card>
