@@ -33,12 +33,6 @@ function BookPageContents() {
         return doc(firestore, 'listings', listingId);
     }, [firestore, listingId]);
     const { data: listing, loading: listingLoading } = useDoc<Accommodation>(listingRef);
-
-    useEffect(() => {
-        if (!userLoading && !user) {
-          router.push('/login?redirect=/');
-        }
-    }, [user, userLoading, router]);
     
     if (!listingId || !checkInStr || !checkOutStr || !guestsStr) {
         return notFound();
@@ -53,8 +47,14 @@ function BookPageContents() {
     const imageUrl = listing?.images?.[0];
 
     const handleConfirmBooking = async () => {
-        if (!user || !listing || !firestore) {
-            toast({ variant: 'destructive', title: 'Error', description: 'You must be logged in to book.' });
+        if (!user) {
+            const currentPath = `/book?listingId=${listingId}&checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guestsStr}`;
+            router.push('/login?redirect=' + encodeURIComponent(currentPath));
+            return;
+        }
+
+        if (!listing || !firestore) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Listing data is missing.' });
             return;
         }
 

@@ -121,10 +121,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
 
 
   const handleReserve = () => {
-    if (!user) {
-      router.push('/login?redirect=' + encodeURIComponent('/listings/' + params.id));
-      return;
-    }
     if (!listing || !date?.from || !date?.to) {
        toast({
         variant: "destructive",
