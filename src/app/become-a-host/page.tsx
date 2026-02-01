@@ -137,7 +137,7 @@ export default function BecomeAHostPage() {
         </div>
         
         <div className="text-center mt-16">
-            <p className="text-muted-foreground">Have an account? <Link href="/host-login" className="text-primary font-medium hover:underline">Log in to manage your listings.</Link></p>
+            <p className="text-muted-foreground">Already have an account? <Link href="/host-login" className="text-primary font-medium hover:underline">Log in to manage your listings.</Link></p>
         </div>
       </div>
     </div>
