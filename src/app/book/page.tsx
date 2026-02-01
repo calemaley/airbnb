@@ -145,7 +145,7 @@ function BookPageContents() {
         }
         
         setIsProcessingBooking(true);
-        const paystack = new (window as any).PaystackPop.setup({
+        const handler = (window as any).PaystackPop.setup({
           key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
           email: details.email,
           phone: details.phone,
@@ -154,10 +154,6 @@ function BookPageContents() {
           ref: '' + Math.floor((Math.random() * 1000000000) + 1), // unique ref
           channels: ['mobile_money', 'card'],
           metadata: {
-            guest_name: details.name || 'Guest',
-            guest_phone: details.phone,
-            listing_id: listing.id,
-            listing_name: listing.name,
              custom_fields: [
                 {
                     display_name: "Guest Name",
@@ -184,7 +180,7 @@ function BookPageContents() {
           },
         });
         
-        paystack.openIframe();
+        handler.openIframe();
     };
 
     const handleInitiateBooking = () => {
