@@ -51,7 +51,7 @@ const amenities = [
 const formSchema = z.object({
   name: z.string().min(5, "Title must be at least 5 characters long."),
   location: z.string().min(3, "Location is required."),
-  description: z.string().min(20, "Description must be at least 20 characters long."),
+  description: z.string().min(20, "Description must be at least 20 characters long.").max(5000, "Description must be 5000 characters or less."),
   pricePerNight: z.coerce.number().min(1000, "Price must be at least KES 1000."),
   category: z.enum(["Budget", "Mid-range", "Luxury"]),
   amenities: z.array(z.string()).refine((value) => value.some((item) => item), {
