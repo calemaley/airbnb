@@ -28,10 +28,15 @@ service cloud.firestore {
       allow create: if isSignedIn() 
                     && request.resource.data.userId == request.auth.uid
                     && request.resource.data.description.size() < 5000;
-      // The owner of a listing can update or delete it
-      allow update: if isSignedIn() 
-                    && isOwner(resource.data.userId)
+      
+      // The owner of a listing can update or delete it.
+      // Any signed-in user can update a listing as long as they don't change the owner ID.
+      // This is a simplified rule for the demo to allow guests to add reviews.
+      // A more robust implementation would use Cloud Functions or more complex rules.
+      allow update: if isSignedIn()
+                    && request.resource.data.userId == resource.data.userId
                     && request.resource.data.description.size() < 5000;
+
       allow delete: if isSignedIn() && isOwner(resource.data.userId);
     }
 

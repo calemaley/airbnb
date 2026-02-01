@@ -29,12 +29,13 @@ import {
   Clapperboard,
   User as UserIcon,
   Phone,
+  Star,
 } from 'lucide-react';
-import type { Amenity, Accommodation, Booking } from '@/lib/types';
+import type { Amenity, Accommodation, Booking, Review } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useDoc, useFirestore, useUser, useCollection } from '@/firebase';
-import { doc, collection, query, where, addDoc } from 'firebase/firestore';
+import { doc, collection, query, where, addDoc, updateDoc } from 'firebase/firestore';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
@@ -43,6 +44,7 @@ import { DateRange } from 'react-day-picker';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 
 const amenityIcons: Record<Amenity, React.ReactNode> = {
   wifi: <Wifi className="h-5 w-5 mr-2" />,
@@ -67,13 +69,17 @@ const amenityLabels: Record<Amenity, string> = {
 
 export default function ListingDetailPage({ params }: { params: { id: string } }) {
   const firestore = useFirestore();
-  const { user } = useUser();
+  const { user, profile } = useUser();
   const router = useRouter();
   const { toast } = useToast();
 
   const [date, setDate] = useState<DateRange | undefined>();
   const [guests, setGuests] = useState(1);
   const [isBooking, setIsBooking] = useState(false);
+
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   
   const listingRef = useMemo(() => {
     if (!firestore || !params.id) return null;
@@ -100,6 +106,19 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
     });
     return dates;
   }, [bookings]);
+
+  const canReview = useMemo(() => {
+    if (!user || !bookings || !listing) return false;
+    
+    const hasCompletedBooking = bookings.some(b => 
+        b.guestId === user.uid && new Date(b.checkOutDate) < new Date()
+    );
+
+    const hasAlreadyReviewed = listing.reviews.some(r => r.userId === user.uid);
+
+    return hasCompletedBooking && !hasAlreadyReviewed;
+  }, [user, bookings, listing]);
+
 
   const handleReserve = async () => {
     if (!user) {
@@ -154,6 +173,44 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
       setIsBooking(false);
     }
   }
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !profile || !listing || !listingRef) return;
+    if (reviewRating === 0 || !reviewComment) {
+        toast({ variant: 'destructive', title: 'Incomplete Review', description: 'Please provide a rating and a comment.' });
+        return;
+    }
+    setIsSubmittingReview(true);
+    try {
+        const newReview: Review = {
+            id: user.uid, // Using user id to ensure one review per user per listing
+            userId: user.uid,
+            author: profile.name,
+            rating: reviewRating,
+            comment: reviewComment,
+            date: new Date().toISOString(),
+        };
+
+        const newReviews = [...listing.reviews, newReview];
+        const newTotalRating = newReviews.reduce((sum, r) => sum + r.rating, 0);
+        const newAverageRating = newTotalRating / newReviews.length;
+
+        await updateDoc(listingRef, {
+            reviews: newReviews,
+            rating: newAverageRating,
+        });
+
+        toast({ title: 'Review Submitted', description: 'Thank you for your feedback!' });
+        setReviewComment('');
+        setReviewRating(0);
+    } catch (error: any) {
+        console.error('Failed to submit review:', error);
+        toast({ variant: 'destructive', title: 'Submission Failed', description: error.message });
+    } finally {
+        setIsSubmittingReview(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -261,7 +318,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
             {listing.reviews && listing.reviews.length > 0 ? (
                 <div className="space-y-6">
                 {listing.reviews.map((review, index) => (
-                    <div key={index} className="bg-card p-4 rounded-lg border">
+                    <div key={review.id || index} className="bg-card p-4 rounded-lg border">
                         <div className="flex items-start">
                             <div className="flex-1">
                                 <div className="flex items-center justify-between">
@@ -277,6 +334,46 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                 </div>
             ) : (
                 <p className="text-muted-foreground">No reviews for this listing yet.</p>
+            )}
+
+            {canReview && (
+              <>
+                <Separator className="my-8" />
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-xl">Leave a Review</CardTitle>
+                        <CardDescription>Share your experience to help other travelers.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleReviewSubmit} className="space-y-4">
+                            <div>
+                                <Label>Your Rating</Label>
+                                <div className="flex gap-1 mt-2">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button type="button" key={star} onClick={() => setReviewRating(star)}>
+                                        <Star className={cn("h-8 w-8 transition-colors", star <= reviewRating ? "text-primary fill-primary" : "text-gray-300 hover:text-primary/50")} />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                             <div>
+                                <Label htmlFor="reviewComment">Your Comment</Label>
+                                <Textarea 
+                                    id="reviewComment"
+                                    className="mt-2"
+                                    rows={4}
+                                    placeholder="How was your stay?"
+                                    value={reviewComment}
+                                    onChange={(e) => setReviewComment(e.target.value)}
+                                />
+                            </div>
+                            <Button type="submit" disabled={isSubmittingReview}>
+                                {isSubmittingReview ? <><Loader2 className="animate-spin mr-2"/> Submitting...</> : "Submit Review"}
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
+              </>
             )}
         </div>
         
