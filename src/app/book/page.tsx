@@ -281,12 +281,6 @@ function BookPageContents() {
                                 </Button>
                             </CardFooter>
                         </Card>
-                         <Alert variant="default" className="mt-6">
-                            <AlertTitle>Security Note</AlertTitle>
-                            <AlertDescription>
-                                For a production-ready application, payment transaction verification should be performed on a server using your Paystack Secret Key to prevent tampering. This demo confirms bookings client-side after a successful payment for simplicity.
-                            </AlertDescription>
-                        </Alert>
                     </div>
                 </div>
             </div>
