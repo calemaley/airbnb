@@ -7,6 +7,7 @@ import * as z from "zod"
 import { addDoc, collection } from "firebase/firestore"
 import { useFirestore, useUser, useStorage } from "@/firebase"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { suggestCategory, type SuggestCategoryInput } from "@/ai/flows/category-suggestion";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -32,7 +33,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast"
 import { errorEmitter } from "@/firebase/error-emitter"
 import { FirestorePermissionError } from "@/firebase/errors"
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles, Bot } from "lucide-react";
 
 const amenities = [
   { id: 'wifi', label: 'Wi-Fi' },
@@ -61,6 +62,9 @@ export default function PostListingPage() {
   const { user } = useUser();
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [aiDescription, setAiDescription] = useState("");
+  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,6 +83,39 @@ export default function PostListingPage() {
         setImageFiles(Array.from(e.target.files));
     }
   };
+
+  const handleSuggestCategory = async () => {
+    if (!aiDescription) {
+      setAiError("Please enter a description first.");
+      return;
+    }
+    setIsSuggesting(true);
+    setAiError(null);
+    try {
+      const input: SuggestCategoryInput = { description: aiDescription };
+      const result = await suggestCategory(input);
+      if (result?.category) {
+        form.setValue("category", result.category);
+        toast({
+          title: "Category Suggested",
+          description: `We've selected the "${result.category}" category for you based on your description.`,
+        });
+      } else {
+        throw new Error("AI did not return a category.");
+      }
+    } catch (error: any) {
+      console.error("AI Category Suggestion Error:", error);
+      setAiError(error.message || "Failed to get AI suggestion.");
+      toast({
+        variant: "destructive",
+        title: "Suggestion Failed",
+        description: "Could not get an AI category suggestion. Please select one manually.",
+      });
+    } finally {
+      setIsSuggesting(false);
+    }
+  };
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!firestore || !user || !storage) {
@@ -213,13 +250,34 @@ export default function PostListingPage() {
                     />
 
                     <FormItem>
-                        <FormLabel className="text-lg">AI Category Suggestion</FormLabel>
+                        <FormLabel className="text-lg flex items-center gap-2">
+                            <Sparkles className="h-5 w-5 text-primary" />
+                            AI Category Suggestion
+                        </FormLabel>
                         <FormDescription>
-                        Paste a short review or description below and AI will suggest the best category for your property.
+                        Paste a short review or description below and our AI will suggest the best category for your property.
                         </FormDescription>
-                        <FormControl>
-                            <Textarea rows={3} placeholder="e.g., A simple and clean room, great for travelers on a budget." disabled/>
-                        </FormControl>
+                        <div className="flex gap-2">
+                            <FormControl>
+                                <Textarea 
+                                    rows={3} 
+                                    placeholder="e.g., A simple and clean room, great for travelers on a budget." 
+                                    value={aiDescription}
+                                    onChange={(e) => setAiDescription(e.target.value)}
+                                    disabled={isSuggesting}
+                                />
+                            </FormControl>
+                            <Button 
+                                type="button" 
+                                onClick={handleSuggestCategory} 
+                                disabled={isSuggesting || !aiDescription}
+                                className="h-auto"
+                            >
+                                {isSuggesting ? <Loader2 className="animate-spin" /> : <Bot />}
+                                <span className="sr-only">Suggest Category</span>
+                            </Button>
+                        </div>
+                        {aiError && <p className="text-sm font-medium text-destructive">{aiError}</p>}
                     </FormItem>
 
                     <FormField
@@ -228,7 +286,7 @@ export default function PostListingPage() {
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel className="text-lg">Category</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                 <FormControl>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select a category" />
