@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Loader2, LogOut, Trash2 } from 'lucide-react';
+import { Loader2, LogOut, Trash2, Pencil } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { collection, query, where, doc, deleteDoc } from 'firebase/firestore';
@@ -133,15 +133,26 @@ export default function DashboardPage() {
                 {listings.map((listing) => (
                   <div key={listing.id} className="relative group">
                     <AccommodationCard listing={listing} />
-                    <Button 
-                      variant="destructive"
-                      size="icon" 
-                      className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      onClick={(e) => handleDeleteClick(e, listing)}
-                      aria-label="Delete listing"
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <Button
+                            asChild
+                            variant="secondary"
+                            size="icon"
+                            aria-label="Edit listing"
+                        >
+                            <Link href={`/edit-listing/${listing.id}`}>
+                                <Pencil className="h-4 w-4" />
+                            </Link>
+                        </Button>
+                        <Button 
+                          variant="destructive"
+                          size="icon" 
+                          onClick={(e) => handleDeleteClick(e, listing)}
+                          aria-label="Delete listing"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
                   </div>
                 ))}
               </div>
