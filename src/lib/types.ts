@@ -41,7 +41,7 @@ export interface UserProfile {
 export interface Booking {
   id: string;
   listingId: string;
-  guestId: string;
+  guestId?: string | null;
   hostId: string;
   checkInDate: string;
   checkOutDate: string;
@@ -51,4 +51,7 @@ export interface Booking {
   listing?: Accommodation;
   guest?: UserProfile;
   paymentRef?: string;
+  guestName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
 }

@@ -49,12 +49,24 @@ service cloud.firestore {
       // Guest or Host can read the booking
       allow read: if isSignedIn() && (isOwner(resource.data.guestId) || isOwner(resource.data.hostId));
       
-      // A guest can create a booking for themself
-      allow create: if isSignedIn()
-                    && isOwner(request.resource.data.guestId)
-                    && request.resource.data.hostId == getListing().userId
-                    // A user cannot book their own listing
-                    && request.resource.data.guestId != request.resource.data.hostId;
+      // A guest (signed-in or not) can create a booking.
+      allow create: if request.resource.data.hostId == getListing().userId &&
+        (
+          // Logged-in user flow
+          (
+            isSignedIn() &&
+            request.resource.data.guestId == request.auth.uid &&
+            request.resource.data.guestId != request.resource.data.hostId
+          ) ||
+          // Guest user flow (not signed in)
+          (
+            !isSignedIn() &&
+            request.resource.data.guestId == null &&
+            request.resource.data.guestName is string &&
+            request.resource.data.guestEmail is string &&
+            request.resource.data.guestPhone is string
+          )
+        );
     }
   }
 }

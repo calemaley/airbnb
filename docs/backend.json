@@ -90,7 +90,19 @@
         },
         "guestId": {
           "type": "string",
-          "description": "ID of the user who made the booking."
+          "description": "ID of the user who made the booking. Null for guest checkouts."
+        },
+        "guestName": {
+            "type": "string",
+            "description": "Name of the guest if not a registered user."
+        },
+        "guestEmail": {
+            "type": "string",
+            "description": "Email of the guest if not a registered user."
+        },
+        "guestPhone": {
+            "type": "string",
+            "description": "Phone number of the guest if not a registered user."
         },
         "hostId": {
           "type": "string",
@@ -123,7 +135,6 @@
       },
       "required": [
         "listingId",
-        "guestId",
         "hostId",
         "checkInDate",
         "checkOutDate",

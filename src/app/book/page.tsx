@@ -5,7 +5,7 @@ import { Suspense, useMemo, useState } from 'react';
 import { useSearchParams, useRouter, notFound } from 'next/navigation';
 import { useDoc, useFirestore, useUser } from '@/firebase';
 import { doc, addDoc, collection } from 'firebase/firestore';
-import type { Accommodation, Booking } from '@/lib/types';
+import type { Booking } from '@/lib/types';
 import { differenceInCalendarDays, format, parseISO } from 'date-fns';
 import { Loader2, Calendar, Users, BedDouble, Mail, MapPin, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,14 +18,27 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import Link from 'next/link';
 import Script from 'next/script';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+
+const guestFormSchema = z.object({
+    name: z.string().min(2, 'Name is required.'),
+    email: z.string().email('Invalid email address.'),
+    phone: z.string().min(10, 'A valid phone number is required.'),
+});
 
 function BookPageContents() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const firestore = useFirestore();
-    const { user, loading: userLoading } = useUser();
+    const { user, profile, loading: userLoading } = useUser();
     const { toast } = useToast();
     const [isProcessingBooking, setIsProcessingBooking] = useState(false);
+    const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
     const listingId = searchParams.get('listingId');
     const checkInStr = searchParams.get('checkIn');
@@ -36,7 +49,12 @@ function BookPageContents() {
         if (!firestore || !listingId) return null;
         return doc(firestore, 'listings', listingId);
     }, [firestore, listingId]);
-    const { data: listing, loading: listingLoading } = useDoc<Accommodation>(listingRef);
+    const { data: listing, loading: listingLoading } = useDoc(listingRef);
+
+    const guestForm = useForm<z.infer<typeof guestFormSchema>>({
+        resolver: zodResolver(guestFormSchema),
+        defaultValues: { name: '', email: '', phone: '' },
+    });
     
     if (!listingId || !checkInStr || !checkOutStr || !guestsStr) {
         return notFound();
@@ -50,33 +68,42 @@ function BookPageContents() {
     const totalCost = listing ? listing.pricePerNight * numberOfNights : 0;
     const imageUrl = listing?.images?.[0];
 
-    const saveBooking = (paymentResponse: any) => {
-        if (!listing || !firestore || !checkInDate || !checkOutDate || !user) {
+    interface GuestDetails {
+        name?: string;
+        email: string;
+        phone?: string;
+    }
+
+    const saveBooking = (paymentResponse: any, guestDetails: GuestDetails) => {
+        if (!listing || !firestore || !checkInDate || !checkOutDate) {
             toast({ variant: 'destructive', title: 'Error', description: 'Booking data is missing, cannot save.' });
             setIsProcessingBooking(false);
             return;
         }
         
-        const newBooking = {
+        const newBooking: Omit<Booking, 'id'> = {
             listingId: listing.id,
-            guestId: user.uid,
+            guestId: user?.uid || null,
             hostId: listing.userId,
             checkInDate: checkInDate.toISOString(),
             checkOutDate: checkOutDate.toISOString(),
             totalPrice: totalCost,
             guests: guests,
-            status: 'confirmed' as const,
+            status: 'confirmed',
             paymentRef: paymentResponse.reference,
+            guestName: user ? profile?.name : guestDetails?.name,
+            guestEmail: user ? (user.email || '') : guestDetails?.email,
+            guestPhone: guestDetails?.phone,
         };
 
         const bookingsCollection = collection(firestore, 'bookings');
-        addDoc(bookingsCollection, newBooking as Omit<Booking, 'id'>)
+        addDoc(bookingsCollection, newBooking)
             .then(() => {
                 toast({
                     title: 'Booking Confirmed!',
                     description: `Your payment was successful and your booking for ${listing.name} is confirmed.`,
                 });
-                router.push('/my-bookings');
+                router.push(`/listings/${listing.id}`);
             })
             .catch((serverError) => {
                 const permissionError = new FirestorePermissionError({
@@ -95,14 +122,8 @@ function BookPageContents() {
             });
     };
 
-    const handlePayment = () => {
-        if (!user) {
-            const currentPath = `/book?listingId=${listingId}&checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${guestsStr}`;
-            router.push('/login?redirect=' + encodeURIComponent(currentPath));
-            return;
-        }
-
-        if (!listing || !user.email) {
+    const handlePayment = (details: GuestDetails) => {
+        if (!listing) {
             toast({ variant: 'destructive', title: 'Error', description: 'Booking or user data is missing.' });
             return;
         }
@@ -112,15 +133,14 @@ function BookPageContents() {
              return;
         }
         
-        // Using `as any` because the Paystack script is loaded externally and not available as a module
         const paystack = new (window as any).PaystackPop.setup({
           key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-          email: user.email,
+          email: details.email,
           amount: totalCost * 100, // Amount in cents
           currency: 'KES',
           ref: '' + Math.floor((Math.random() * 1000000000) + 1), // unique ref
           onSuccess: (response: any) => {
-            saveBooking(response);
+            saveBooking(response, details);
           },
           onClose: () => {
             toast({
@@ -136,6 +156,19 @@ function BookPageContents() {
         paystack.openIframe();
     };
 
+    const handleInitiateBooking = () => {
+        if (user && user.email) {
+            handlePayment({ email: user.email });
+        } else {
+            guestForm.reset();
+            setIsGuestModalOpen(true);
+        }
+    };
+
+    function onGuestFormSubmit(values: z.infer<typeof guestFormSchema>) {
+        setIsGuestModalOpen(false);
+        handlePayment(values);
+    }
 
     if (listingLoading || userLoading) {
         return (
@@ -216,7 +249,7 @@ function BookPageContents() {
                             </CardContent>
                             <CardFooter className="bg-muted/50 p-6 flex-col sm:flex-row items-center justify-between">
                                 <p className="text-sm text-muted-foreground mb-4 sm:mb-0">By proceeding, you agree to the <Link href="/terms-of-service" className="underline" target="_blank">Terms of Service</Link>.</p>
-                                <Button size="lg" onClick={handlePayment} disabled={isProcessingBooking || totalCost <= 0 || (user && user.uid === listing.userId) || !process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY}>
+                                <Button size="lg" onClick={handleInitiateBooking} disabled={isProcessingBooking || totalCost <= 0 || (user && user.uid === listing.userId) || !process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY}>
                                     {isProcessingBooking ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Processing...</> : <><CreditCard className="mr-2 h-4 w-4" />Proceed to Payment</>}
                                 </Button>
                             </CardFooter>
@@ -230,6 +263,62 @@ function BookPageContents() {
                     </div>
                 </div>
             </div>
+
+            <Dialog open={isGuestModalOpen} onOpenChange={setIsGuestModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Guest Information</DialogTitle>
+                        <DialogDescription>Please provide your details to continue with the booking.</DialogDescription>
+                    </DialogHeader>
+                    <Form {...guestForm}>
+                        <form onSubmit={guestForm.handleSubmit(onGuestFormSubmit)} className="space-y-4">
+                            <FormField
+                                control={guestForm.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Full Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="John Doe" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={guestForm.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email Address</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="you@example.com" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={guestForm.control}
+                                name="phone"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone Number</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="0712345678" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button type="submit" className="w-full" disabled={guestForm.formState.isSubmitting}>
+                                {guestForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Continue to Payment
+                            </Button>
+                        </form>
+                    </Form>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
