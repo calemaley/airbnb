@@ -53,12 +53,6 @@ export default function Header() {
                     </>
                 ) : (
                     <>
-                     <Button asChild>
-                        <Link href="/host-login">Host Login</Link>
-                    </Button>
-                    <Button variant="ghost" asChild>
-                        <Link href="/login">Guest Login</Link>
-                    </Button>
                     </>
                 )}
                 </>
@@ -93,14 +87,8 @@ export default function Header() {
                 </Button>
               </>
              ) : (
-                <div className="flex flex-col gap-2 pt-2 border-t">
-                    <Button asChild className="w-full justify-center">
-                        <Link href="/host-login" onClick={() => setIsOpen(false)}>Host Login</Link>
-                    </Button>
-                    <Button variant="outline" asChild className="w-full justify-center">
-                        <Link href="/login" onClick={() => setIsOpen(false)}>Guest Login</Link>
-                    </Button>
-                </div>
+                <>
+                </>
              )}
           </div>
         </div>
