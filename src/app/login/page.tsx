@@ -1,6 +1,6 @@
-
 "use client"
 
+import { Suspense } from "react";
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -21,7 +21,7 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required."),
 })
 
-export default function LoginPage() {
+function LoginPageContents() {
   const auth = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -106,4 +106,17 @@ export default function LoginPage() {
       </Card>
     </div>
   )
+}
+
+// Next.js pages that use `useSearchParams` must be wrapped in a Suspense boundary.
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            </div>
+        }>
+            <LoginPageContents />
+        </Suspense>
+    );
 }
