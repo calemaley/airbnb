@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState } from "react";
@@ -152,7 +153,15 @@ export default function PostListingPage() {
         
         const listingsCollection = collection(firestore, "listings");
 
-        await addDoc(listingsCollection, newListingData)
+        addDoc(listingsCollection, newListingData)
+          .catch((serverError) => {
+              const permissionError = new FirestorePermissionError({
+                path: 'listings',
+                operation: 'create',
+                requestResourceData: newListingData,
+              });
+              errorEmitter.emit('permission-error', permissionError);
+          });
         
         toast({
           title: "Listing Submitted!",
@@ -163,18 +172,12 @@ export default function PostListingPage() {
         const fileInput = document.getElementById('images') as HTMLInputElement;
         if(fileInput) fileInput.value = '';
 
-    } catch(serverError: any) {
-        const permissionError = new FirestorePermissionError({
-          path: "listings",
-          operation: 'create',
-          requestResourceData: values,
-        });
-        errorEmitter.emit('permission-error', permissionError);
-        
+    } catch(error: any) {
+        console.error("Submission process failed:", error);
         toast({
           variant: "destructive",
           title: "Submission Failed",
-          description: serverError.message || "Could not submit your listing.",
+          description: error.message || "Could not submit your listing.",
         });
     } finally {
         setIsSubmitting(false);
@@ -371,3 +374,5 @@ export default function PostListingPage() {
     </div>
   )
 }
+
+    
