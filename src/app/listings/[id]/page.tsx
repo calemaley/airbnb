@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
-import { notFound } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,12 +24,21 @@ import {
   MapPin,
   Waves,
   Loader2,
+  AlertCircle,
+  PartyPopper,
 } from 'lucide-react';
-import type { Amenity, Accommodation } from '@/lib/types';
+import type { Amenity, Accommodation, Booking } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useDoc, useFirestore } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useDoc, useFirestore, useUser, useCollection } from '@/firebase';
+import { doc, collection, query, where, addDoc } from 'firebase/firestore';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { format, differenceInCalendarDays } from 'date-fns';
+import { DateRange } from 'react-day-picker';
+import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const amenityIcons: Record<Amenity, React.ReactNode> = {
   wifi: <Wifi className="h-5 w-5 mr-2" />,
@@ -50,13 +59,93 @@ const amenityLabels: Record<Amenity, string> = {
 
 export default function ListingDetailPage({ params }: { params: { id: string } }) {
   const firestore = useFirestore();
+  const { user } = useUser();
+  const router = useRouter();
+  const { toast } = useToast();
 
+  const [date, setDate] = useState<DateRange | undefined>();
+  const [guests, setGuests] = useState(1);
+  const [isBooking, setIsBooking] = useState(false);
+  
   const listingRef = useMemo(() => {
     if (!firestore || !params.id) return null;
     return doc(firestore, 'listings', params.id);
   }, [firestore, params.id]);
 
   const { data: listing, loading } = useDoc<Accommodation>(listingRef);
+
+  const bookingsQuery = useMemo(() => {
+    if (!firestore || !params.id) return null;
+    return query(collection(firestore, 'bookings'), where('listingId', '==', params.id));
+  }, [firestore, params.id]);
+
+  const { data: bookings } = useCollection<Booking>(bookingsQuery);
+
+  const disabledDates = useMemo(() => {
+    const dates: Date[] = [];
+    bookings?.forEach(booking => {
+      const checkIn = new Date(booking.checkInDate);
+      const checkOut = new Date(booking.checkOutDate);
+      for (let d = new Date(checkIn); d <= checkOut; d.setDate(d.getDate() + 1)) {
+        dates.push(new Date(d));
+      }
+    });
+    return dates;
+  }, [bookings]);
+
+  const handleReserve = async () => {
+    if (!user) {
+      router.push('/login?redirect=/listings/' + params.id);
+      return;
+    }
+    if (!listing || !date?.from || !date?.to) {
+       toast({
+        variant: "destructive",
+        title: "Incomplete Information",
+        description: "Please select your check-in and check-out dates.",
+      });
+      return;
+    }
+
+    setIsBooking(true);
+    try {
+      const numberOfNights = differenceInCalendarDays(date.to, date.from);
+      if (numberOfNights <= 0) {
+        throw new Error("Check-out date must be after check-in date.");
+      }
+
+      const newBooking = {
+        listingId: listing.id,
+        guestId: user.uid,
+        hostId: listing.userId,
+        checkInDate: date.from.toISOString(),
+        checkOutDate: date.to.toISOString(),
+        totalPrice: listing.pricePerNight * numberOfNights,
+        guests,
+        status: 'confirmed' as const,
+      };
+
+      await addDoc(collection(firestore, 'bookings'), newBooking);
+
+      toast({
+        title: "Booking Successful!",
+        description: `You've booked ${listing.name}. Check "My Bookings" for details.`,
+        duration: 5000,
+      });
+
+      router.push('/my-bookings');
+
+    } catch(e: any) {
+      console.error("Booking failed:", e);
+      toast({
+        variant: "destructive",
+        title: "Booking Failed",
+        description: e.message || "Could not complete your booking. Please try again.",
+      });
+    } finally {
+      setIsBooking(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -71,6 +160,8 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   }
   
   const listingImages = listing.images || [];
+  const numberOfNights = date?.from && date?.to ? differenceInCalendarDays(date.to, date.from) : 0;
+  const totalCost = numberOfNights > 0 ? numberOfNights * listing.pricePerNight : 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -97,7 +188,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           {listingImages.length > 0 ? listingImages.map((imageUrl, index) => (
             <CarouselItem key={index}>
               <div className="relative h-[500px]">
-                <Image src={imageUrl} alt={`${listing.name} - image ${index + 1}`} fill className="object-cover" />
+                <Image src={imageUrl} alt={`${listing.name} - image ${index + 1}`} fill className="object-cover" quality={100} priority={index === 0}/>
               </div>
             </CarouselItem>
           )) : (
@@ -138,8 +229,8 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           <h3 className="font-headline text-xl font-bold mb-4">Reviews</h3>
             {listing.reviews && listing.reviews.length > 0 ? (
                 <div className="space-y-6">
-                {listing.reviews.map(review => (
-                    <div key={review.id} className="bg-card p-4 rounded-lg border">
+                {listing.reviews.map((review, index) => (
+                    <div key={index} className="bg-card p-4 rounded-lg border">
                         <div className="flex items-start">
                             <div className="flex-1">
                                 <div className="flex items-center justify-between">
@@ -170,25 +261,73 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="check-in">Check-in</Label>
-                  <Input id="check-in" type="date" disabled placeholder="Check-in date" />
-                </div>
-                 <div className="space-y-2">
-                  <Label htmlFor="check-out">Check-out</Label>
-                  <Input id="check-out" type="date" disabled placeholder="Check-out date" />
-                </div>
+              <div className="grid gap-2">
+                <Label>Select Dates</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="date"
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      {date?.from ? (
+                        date.to ? (
+                          <>
+                            {format(date.from, "LLL dd, y")} -{" "}
+                            {format(date.to, "LLL dd, y")}
+                          </>
+                        ) : (
+                          format(date.from, "LLL dd, y")
+                        )
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={date?.from}
+                      selected={date}
+                      onSelect={setDate}
+                      numberOfMonths={1}
+                      disabled={day => disabledDates.some(disabled => format(disabled, 'y-MM-dd') === format(day, 'y-MM-dd')) || day < new Date(new Date().setHours(0,0,0,0))}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
+
                <div className="space-y-2">
                   <Label htmlFor="guests">Guests</Label>
-                  <Input id="guests" type="number" defaultValue={2} disabled min={1}/>
+                  <Input id="guests" type="number" value={guests} onChange={e => setGuests(Number(e.target.value))} min={1} max={10}/>
                 </div>
-                <p className="text-xs text-center text-muted-foreground pt-2">Booking functionality is not yet implemented.</p>
+                
+                {user && user.uid === listing.userId && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>This is your listing</AlertTitle>
+                    <AlertDescription>
+                      You cannot book your own property.
+                    </AlertDescription>
+                  </Alert>
+                )}
 
             </CardContent>
             <CardFooter className="flex-col items-stretch space-y-2">
-                <Button size="lg" className="w-full text-lg h-12" disabled>Reserve</Button>
+               {totalCost > 0 && (
+                <div className='rounded-lg bg-muted/50 p-4 space-y-2'>
+                    <div className='flex justify-between'><span>KES {listing.pricePerNight.toLocaleString()} x {numberOfNights} nights</span> <span>KES {totalCost.toLocaleString()}</span></div>
+                     <Separator/>
+                    <div className='flex justify-between font-bold text-lg'><span>Total</span> <span>KES {totalCost.toLocaleString()}</span></div>
+                </div>
+               )}
+                <Button size="lg" className="w-full text-lg h-12" onClick={handleReserve} disabled={isBooking || !date?.from || !date?.to || (user && user.uid === listing.userId)}>
+                  {isBooking ? <Loader2 className="animate-spin" /> : "Reserve"}
+                </Button>
                 <p className="text-center text-sm text-muted-foreground">You won't be charged yet</p>
             </CardFooter>
           </Card>

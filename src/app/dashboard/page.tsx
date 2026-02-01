@@ -11,11 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Loader2, LogOut, Trash2, Pencil } from 'lucide-react';
+import { Loader2, LogOut, Trash2, Pencil, CalendarX2 } from 'lucide-react';
 import { getAuth, signOut } from 'firebase/auth';
 import Link from 'next/link';
-import { collection, query, where, doc, deleteDoc } from 'firebase/firestore';
-import type { Accommodation } from '@/lib/types';
+import { collection, query, where, doc, deleteDoc, orderBy } from 'firebase/firestore';
+import type { Accommodation, Booking } from '@/lib/types';
 import { AccommodationCard } from '@/components/listings/AccommodationCard';
 import {
   AlertDialog,
@@ -28,6 +28,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { BookingItem } from '@/components/dashboard/BookingItem';
 
 export default function DashboardPage() {
   const { user, profile, loading } = useUser();
@@ -46,8 +47,17 @@ export default function DashboardPage() {
     if (!user || !firestore) return null;
     return query(collection(firestore, 'listings'), where('userId', '==', user.uid));
   }, [user, firestore]);
-
   const { data: listings, loading: listingsLoading } = useCollection<Accommodation>(listingsQuery);
+  
+  const hostBookingsQuery = useMemo(() => {
+    if (!user || !firestore) return null;
+    return query(
+        collection(firestore, 'bookings'), 
+        where('hostId', '==', user.uid),
+        orderBy('checkInDate', 'desc')
+    );
+  }, [user, firestore]);
+  const { data: hostBookings, loading: bookingsLoading } = useCollection<Booking>(hostBookingsQuery);
 
   const handleLogout = async () => {
     const auth = getAuth();
@@ -102,7 +112,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <p>
-              This is your dashboard. From here, you can manage your listings, view
+              This is your central hub. From here, you can manage your listings, view
               bookings, and update your profile.
             </p>
 
@@ -120,7 +130,36 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader>
+            <CardTitle>Bookings on Your Properties</CardTitle>
+             <CardDescription>Reservations made by guests on your listings.</CardDescription>
+          </CardHeader>
+          <CardContent>
+             {bookingsLoading && (
+               <div className="flex items-center justify-center p-8">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            )}
+            {hostBookings && hostBookings.length > 0 ? (
+              <div className="space-y-6">
+                {hostBookings.map((booking) => (
+                  <BookingItem key={booking.id} booking={booking} perspective="host" />
+                ))}
+              </div>
+            ) : (
+             !bookingsLoading && (
+                <div className="text-center py-8">
+                    <CalendarX2 className="h-12 w-12 mx-auto text-muted-foreground mb-2"/>
+                    <p className="text-muted-foreground">You don't have any bookings yet.</p>
+                </div>
+             )
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>Your Listings</CardTitle>
+             <CardDescription>Properties you are currently hosting.</CardDescription>
           </CardHeader>
           <CardContent>
             {listingsLoading && (

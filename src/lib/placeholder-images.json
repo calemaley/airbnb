@@ -3,74 +3,74 @@
     {
       "id": "hero-1",
       "description": "Scenic view of Kenyan savannah at sunset",
-      "imageUrl": "https://images.unsplash.com/photo-1678019032053-69ef34700798?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxrZW55YSUyMGxhbmRzY2FwZXxlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1678019032053-69ef34700798?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxrZW55YSUyMGxhbmRzY2FwZXxlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=100&w=1920",
       "imageHint": "kenya landscape"
     },
     {
       "id": "hero-2",
       "description": "Luxury safari tent interior",
-      "imageUrl": "https://images.unsplash.com/photo-1604593923579-a49209564489?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBzYWZhcmklMjB0ZW50fGVufDB8fHx8MTc2ODIyMjQwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1604593923579-a49209564489?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBzYWZhcmklMjB0ZW50fGVufDB8fHx8MTc2ODIyMjQwN3ww&ixlib=rb-4.1.0&q=100&w=1920",
       "imageHint": "luxury safari"
     },
     {
       "id": "hero-3",
       "description": "Infinity pool overlooking a valley in Kenya",
-      "imageUrl": "https://images.unsplash.com/photo-1615880144557-96860275a681?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxrZW55YSUyMGx1eHVyeSUyMGhvdGVsfGVufDB8fHx8MTc2ODIyMjQwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1615880144557-96860275a681?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxrZW55YSUyMGx1eHVyeSUyMGhvdGVsfGVufDB8fHx8MTc2ODIyMjQwN3ww&ixlib=rb-4.1.0&q=100&w=1920",
       "imageHint": "kenya luxury"
     },
     {
       "id": "hero-4",
       "description": "Cozy living room with a fireplace in a Kenyan home",
-      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6164a83639?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb3p5JTIwaG9tZSUyMGZpcmVwbGFjZXxlbnwwfHx8fDE3NjgyMjI0MDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6164a83639?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb3p5JTIwaG9tZSUyMGZpcmVwbGFjZXxlbnwwfHx8fDE3NjgyMjI0MDd8MA&ixlib=rb-4.1.0&q=100&w=1920",
       "imageHint": "cozy home"
     },
     {
       "id": "listing-1",
-      "description": "Modern apartment living room",
-      "imageUrl": "https://images.unsplash.com/photo-1628592102751-ba83b0314276?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bW9kZXJuJTIwYXBhcnRtZW50fGVufDB8fHx8MTc2ODExODczMHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "modern apartment"
+      "description": "A bright, modern living room with stylish furniture",
+      "imageUrl": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=95&w=2070",
+      "imageHint": "modern living room"
     },
     {
       "id": "listing-2",
-      "description": "Cozy beachfront cottage",
-      "imageUrl": "https://images.unsplash.com/photo-1567858156907-bc0d6be1fa4f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiZWFjaCUyMGNvdHRhZ2V8ZW58MHx8fHwxNzY4MjExNzc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "beach cottage"
+      "description": "A minimalist and luxurious living room interior",
+      "imageUrl": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=95&w=2000",
+      "imageHint": "luxury interior"
     },
     {
       "id": "listing-3",
-      "description": "Luxury villa with a pool",
-      "imageUrl": "https://images.unsplash.com/photo-1717167398817-121e3c283dbb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsdXh1cnklMjB2aWxsYXxlbnwwfHx8fDE3NjgxNDg5NzN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "luxury villa"
+      "description": "A cozy and modern bedroom with a well-made bed",
+      "imageUrl": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=95&w=2070",
+      "imageHint": "modern bedroom"
     },
     {
       "id": "listing-4",
-      "description": "Rustic cabin in the woods",
-      "imageUrl": "https://images.unsplash.com/photo-1766886653730-95a89cced554?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxydXN0aWMlMjBjYWJpbnxlbnwwfHx8fDE3NjgxNzM1OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "rustic cabin"
+      "description": "A stylish living room with contemporary furniture",
+      "imageUrl": "https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=95&w=2000",
+      "imageHint": "stylish living"
     },
     {
       "id": "listing-5",
-      "description": "Chic city studio",
-      "imageUrl": "https://images.unsplash.com/photo-1715540667755-5d2205bce475?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMHN0dWRpb3xlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "city studio"
+      "description": "A well-lit, modern living room space",
+      "imageUrl": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=95&w=2070",
+      "imageHint": "bright room"
     },
     {
       "id": "listing-6",
-      "description": "Spacious family home with a garden",
-      "imageUrl": "https://images.unsplash.com/photo-1601758003122-53c40e686a19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYW1pbHklMjBob21lfGVufDB8fHx8MTc2ODIxMTc3NHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "family home"
+      "description": "A luxurious bedroom setup in a modern hotel",
+      "imageUrl": "https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=95&w=2000",
+      "imageHint": "luxury bedroom"
     },
     {
       "id": "listing-7",
-      "description": "Safari lodge with a view of the plains",
-      "imageUrl": "https://images.unsplash.com/photo-1694771170458-3487497fc7d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzYWZhcmklMjBsb2RnZXxlbnwwfHx8fDE3NjgyMTE3NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "safari lodge"
+      "description": "A clean hotel room with two beds",
+      "imageUrl": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=95&w=2070",
+      "imageHint": "hotel room"
     },
     {
       "id": "listing-8",
-      "description": "Traditional Swahili house in Lamu",
-      "imageUrl": "https://images.unsplash.com/photo-1610019352323-e1e77fdd32a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzd2FoaWxpJTIwaG91c2V8ZW58MHx8fHwxNzY4MjExNzc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "swahili house"
+      "description": "A hotel room with a beautiful view",
+      "imageUrl": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=95&w=2070",
+      "imageHint": "room view"
     },
     {
       "id": "marketing-drone",
@@ -81,25 +81,25 @@
     {
       "id": "listing-9",
       "description": "Bright and modern living room area.",
-      "imageUrl": "https://images.unsplash.com/photo-1554995207-c18c203602cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHwxfHxzb2ZhJTIwbGl2aW5nJTIwcm9vbXxlbnwwfHx8fDE3MjEyNDYwMjZ8MA&ixlib=rb-4.0.3&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1554995207-c18c203602cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHwxfHxzb2ZhJTIwbGl2aW5nJTIwcm9vbXxlbnwwfHx8fDE3MjEyNDYwMjZ8MA&ixlib=rb-4.0.3&q=95&w=1080",
       "imageHint": "modern livingroom"
     },
     {
       "id": "listing-9-2",
       "description": "Comfortable hotel-style bedroom with a made bed.",
-      "imageUrl": "https://images.unsplash.com/photo-1595526114035-0d45ed16433d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHw1fHxob3RlbCUyMGJlZHJvb218ZW58MHx8fHwxNzIxMjQ2MTMxfDA&ixlib-rb-4.0.3&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1595526114035-0d45ed16433d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHw1fHxob3RlbCUyMGJlZHJvb218ZW58MHx8fHwxNzIxMjQ2MTMxfDA&ixlib=rb-4.0.3&q=95&w=1080",
       "imageHint": "hotel bedroom"
     },
     {
       "id": "listing-9-3",
       "description": "Sleek and modern apartment kitchen with integrated appliances.",
-      "imageUrl": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHw1fHxhcGFydG1lbnQlMjBraXRjaGVufGVufDB8fHx8fDE3MjEyNDYxNjJ8MA&ixlib=rb-4.0.3&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHw1fHxhcGFydG1lbnQlMjBraXRjaGVufGVufDB8fHx8fDE3MjEyNDYxNjJ8MA&ixlib=rb-4.0.3&q=95&w=1080",
       "imageHint": "apartment kitchen"
     },
     {
       "id": "listing-9-4",
       "description": "Clean and modern bathroom with a glass shower.",
-      "imageUrl": "https://images.unsplash.com/photo-1540518614846-7eded433c457?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHw1fHxhcGFydG1lbnQlMjBiYXRocm9vbXxlbnwwfHx8fDE3MjEyNDYxOTR8MA&ixlib-rb-4.0.3&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1540518614846-7eded433c457?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNDE5ODJ8MHwxfHNlYXJjaHw1fHxhcGFydG1lbnQlMjBiYXRocm9vbXxlbnwwfHx8fDE3MjEyNDYxOTR8MA&ixlib=rb-4.0.3&q=95&w=1080",
       "imageHint": "modern bathroom"
     }
   ]

@@ -66,6 +66,55 @@
         }
       },
       "required": ["userId", "name", "location", "pricePerNight", "category", "description"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Represents a booking made by a user for a listing.",
+      "type": "object",
+      "properties": {
+        "listingId": {
+          "type": "string",
+          "description": "ID of the booked listing."
+        },
+        "guestId": {
+          "type": "string",
+          "description": "ID of the user who made the booking."
+        },
+        "hostId": {
+          "type": "string",
+          "description": "ID of the host of the listing."
+        },
+        "checkInDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "checkOutDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "totalPrice": {
+          "type": "number"
+        },
+        "guests": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "confirmed"
+          ]
+        }
+      },
+      "required": [
+        "listingId",
+        "guestId",
+        "hostId",
+        "checkInDate",
+        "checkOutDate",
+        "totalPrice",
+        "guests",
+        "status"
+      ]
     }
   },
   "auth": {
@@ -83,6 +132,12 @@
         "$ref": "#/entities/Listing"
       },
       "description": "Stores all accommodation listings."
+    },
+    "/bookings/{bookingId}": {
+      "schema": {
+        "$ref": "#/entities/Booking"
+      },
+      "description": "Stores all booking information."
     }
   }
 }

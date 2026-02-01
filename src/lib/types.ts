@@ -25,5 +25,25 @@ export interface Accommodation {
     name: string;
     avatar: string;
   };
-  userId?: string;
+  userId: string;
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface Booking {
+  id: string;
+  listingId: string;
+  guestId: string;
+  hostId: string;
+  checkInDate: string;
+  checkOutDate: string;
+  totalPrice: number;
+  guests: number;
+  status: 'confirmed';
+  listing?: Accommodation;
+  guest?: UserProfile;
 }

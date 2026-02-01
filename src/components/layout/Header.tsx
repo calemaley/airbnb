@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, Hotel, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, Hotel, LogOut, LayoutDashboard, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
@@ -37,6 +37,9 @@ export default function Header() {
             <>
               {user ? (
                 <>
+                  <Button variant="ghost" asChild>
+                      <Link href="/my-bookings"><CalendarDays className="mr-2"/>My Bookings</Link>
+                  </Button>
                   <Button variant="ghost" asChild>
                     <Link href="/dashboard"><LayoutDashboard className="mr-2"/>Dashboard</Link>
                   </Button>
@@ -75,6 +78,12 @@ export default function Header() {
             <Link href="/listings" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Explore Listings</Link>
             <Link href="/become-a-host" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Become a Host</Link>
             <Link href="/about" className="font-medium text-lg" onClick={() => setIsOpen(false)}>About StaysKenya</Link>
+             {user && (
+              <>
+                <Link href="/my-bookings" className="font-medium text-lg" onClick={() => setIsOpen(false)}>My Bookings</Link>
+                <Link href="/dashboard" className="font-medium text-lg" onClick={() => setIsOpen(false)}>Dashboard</Link>
+              </>
+            )}
           </div>
         </div>
       )}

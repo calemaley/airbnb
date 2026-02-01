@@ -29,5 +29,22 @@ service cloud.firestore {
       // The owner of a listing can update or delete it
       allow update, delete: if isSignedIn() && isOwner(resource.data.userId);
     }
+
+    // BOOKINGS
+    match /bookings/{bookingId} {
+       function getListing() {
+        return get(/databases/$(database)/documents/listings/$(request.resource.data.listingId)).data;
+      }
+      
+      // Guest or Host can read the booking
+      allow read: if isSignedIn() && (isOwner(resource.data.guestId) || isOwner(resource.data.hostId));
+      
+      // A guest can create a booking for themself
+      allow create: if isSignedIn()
+                    && isOwner(request.resource.data.guestId)
+                    && request.resource.data.hostId == getListing().userId
+                    // A user cannot book their own listing
+                    && request.resource.data.guestId != request.resource.data.hostId;
+    }
   }
 }

@@ -32,18 +32,24 @@ export default function HeroCarousel() {
 
   const { data: premiumListings, loading } = useCollection<Accommodation>(premiumListingsQuery);
 
-  const premiumImageIds = useMemo(() => {
-      return premiumListings?.map(listing => listing.images[0]).filter(Boolean) || [];
+  const premiumImageUrls = useMemo(() => {
+      return premiumListings?.map(listing => listing.images[0]).filter(Boolean) as string[] || [];
   }, [premiumListings]);
   
-  const carouselImages = PlaceHolderImages.filter(p => premiumImageIds.includes(p.id));
+  const carouselImages = premiumImageUrls.map((url, i) => ({
+      id: `premium-${i}`,
+      imageUrl: url,
+      description: 'Premium listing',
+      imageHint: 'luxury property'
+  }));
 
   if (loading) {
     return <Skeleton className="absolute inset-0 w-full h-full" />;
   }
 
   // Fallback to default hero images if no premium listings with images are found
-  const displayImages = carouselImages.length > 0 ? carouselImages : PlaceHolderImages.filter(p => p.id.startsWith('hero-'));
+  const defaultImages = PlaceHolderImages.filter(p => p.id.startsWith('hero-'));
+  const displayImages = carouselImages.length > 0 ? carouselImages : defaultImages;
 
   return (
     <Carousel
@@ -62,6 +68,7 @@ export default function HeroCarousel() {
                 fill
                 className="object-cover"
                 priority={index === 0}
+                quality={90}
               />
             </div>
           </CarouselItem>
