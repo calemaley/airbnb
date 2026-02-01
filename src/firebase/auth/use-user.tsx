@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, DocumentData } from 'firebase/firestore';
 import { useAuth, useFirestore } from '@/firebase';
@@ -21,7 +21,11 @@ export const useUser = (): UserHook => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const userDocRef = user && firestore ? doc(firestore, 'users', user.uid) : null;
+  const userDocRef = useMemo(() => {
+    if (!user || !firestore) return null;
+    return doc(firestore, 'users', user.uid);
+  }, [user, firestore]);
+  
   const { data: profile, loading: profileLoading } = useDoc(userDocRef);
 
   useEffect(() => {
