@@ -122,30 +122,56 @@ function BookPageContents() {
     };
 
     const handlePayment = (details: GuestDetails) => {
-        if (!listing) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Booking or user data is missing.' });
+        if (typeof window === 'undefined' || !(window as any).PaystackPop) {
+            toast({
+                variant: 'destructive',
+                title: 'Payment Error',
+                description: 'The payment gateway is not available. Please refresh and try again.',
+            });
+            setIsProcessingBooking(false);
             return;
         }
-
+    
+        if (!listing) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Listing data is missing.' });
+            setIsProcessingBooking(false);
+            return;
+        }
+    
         if (!process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY) {
              toast({ variant: 'destructive', title: 'Configuration Error', description: 'Paystack public key is not configured.' });
+             setIsProcessingBooking(false);
              return;
         }
         
+        setIsProcessingBooking(true);
         const paystack = new (window as any).PaystackPop.setup({
           key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
           email: details.email,
-          amount: totalCost * 100, // Amount in cents
+          phone: details.phone,
+          amount: totalCost * 100, // Amount in KES, converted to cents
           currency: 'KES',
           ref: '' + Math.floor((Math.random() * 1000000000) + 1), // unique ref
-          channels: ['mobile_money', 'card'], // Prioritize M-Pesa and Card
+          channels: ['mobile_money', 'card'],
           metadata: {
             guest_name: details.name || 'Guest',
             guest_phone: details.phone,
             listing_id: listing.id,
             listing_name: listing.name,
+             custom_fields: [
+                {
+                    display_name: "Guest Name",
+                    variable_name: "guest_name",
+                    value: details.name
+                },
+                {
+                    display_name: "Phone Number",
+                    variable_name: "guest_phone",
+                    value: details.phone
+                }
+            ]
           },
-          onSuccess: (response: any) => {
+          callback: (response: any) => {
             saveBooking(response, details);
           },
           onClose: () => {
@@ -158,7 +184,6 @@ function BookPageContents() {
           },
         });
         
-        setIsProcessingBooking(true);
         paystack.openIframe();
     };
 
