@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import Link from 'next/link';
 
 function BookPageContents() {
     const router = useRouter();
@@ -169,7 +170,7 @@ function BookPageContents() {
                             </div>
                         </CardContent>
                         <CardFooter className="bg-muted/50 p-6 flex-col sm:flex-row items-center justify-between">
-                            <p className="text-sm text-muted-foreground mb-4 sm:mb-0">By confirming, you agree to the <a href="#" className="underline">Terms of Service</a>.</p>
+                            <p className="text-sm text-muted-foreground mb-4 sm:mb-0">By confirming, you agree to the <Link href="/terms-of-service" className="underline" target="_blank">Terms of Service</Link>.</p>
                              <Button size="lg" onClick={handleConfirmBooking} disabled={isConfirming}>
                                 {isConfirming ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>Confirming...</> : 'Confirm & Book'}
                             </Button>
