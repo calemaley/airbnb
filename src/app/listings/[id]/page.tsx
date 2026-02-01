@@ -69,7 +69,6 @@ const amenityLabels: Record<Amenity, string> = {
 };
 
 export default function ListingDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
   const firestore = useFirestore();
   const { user, profile } = useUser();
   const router = useRouter();
@@ -92,16 +91,16 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   }, []);
   
   const listingRef = useMemo(() => {
-    if (!firestore || !id) return null;
-    return doc(firestore, 'listings', id);
-  }, [firestore, id]);
+    if (!firestore || !params.id) return null;
+    return doc(firestore, 'listings', params.id);
+  }, [firestore, params.id]);
 
   const { data: listing, loading } = useDoc<Accommodation>(listingRef);
 
   const bookingsQuery = useMemo(() => {
-    if (!firestore || !id) return null;
-    return query(collection(firestore, 'bookings'), where('listingId', '==', id));
-  }, [firestore, id]);
+    if (!firestore || !params.id) return null;
+    return query(collection(firestore, 'bookings'), where('listingId', '==', params.id));
+  }, [firestore, params.id]);
 
   const { data: bookings } = useCollection<Booking>(bookingsQuery);
 
@@ -153,7 +152,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
     setIsBooking(true);
 
     const queryParams = new URLSearchParams({
-        listingId: id,
+        listingId: params.id,
         checkIn: date.from.toISOString(),
         checkOut: date.to.toISOString(),
         guests: guests.toString(),
