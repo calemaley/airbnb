@@ -108,7 +108,7 @@ export default function SignupPage() {
                   <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                      <Input type="password" placeholder="••••••••" />
+                      <Input type="password" placeholder="••••••••" {...field} />
                       </FormControl>
                       <FormMessage />
                   </FormItem>
