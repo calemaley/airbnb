@@ -16,6 +16,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from "lucide-react"
+import { errorEmitter } from "@/firebase/error-emitter"
+import { FirestorePermissionError } from "@/firebase/errors"
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -35,17 +37,42 @@ export default function SignupPage() {
   })
 
   async function onSubmit(values: z.infer<typeof signupSchema>) {
-    if (!auth || !firestore) return;
+    if (!auth || !firestore) {
+        toast({
+            variant: "destructive",
+            title: "Signup Failed",
+            description: "Firebase is not initialized.",
+        });
+        return;
+    }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 
-      // Create user profile in Firestore
-      await setDoc(doc(firestore, "users", user.uid), {
+      const userProfileData = {
         name: values.name,
         email: values.email,
-      });
+      };
+      
+      const userDocRef = doc(firestore, "users", user.uid);
+      
+      // Create user profile in Firestore without awaiting
+      setDoc(userDocRef, userProfileData)
+        .catch((serverError) => {
+            const permissionError = new FirestorePermissionError({
+              path: userDocRef.path,
+              operation: 'create',
+              requestResourceData: userProfileData,
+            });
+            errorEmitter.emit('permission-error', permissionError);
+            
+            toast({
+              variant: "destructive",
+              title: "Profile Creation Failed",
+              description: serverError.message || "Could not save your profile.",
+            });
+        });
 
       toast({
         title: "Registration Successful!",
