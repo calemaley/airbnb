@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -300,10 +299,11 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
             </>
           )}
 
-          <Separator className="my-8" />
           
-          <h3 className="font-headline text-xl font-bold mb-4">Reviews</h3>
-            {listing.reviews && listing.reviews.length > 0 ? (
+          {listing.reviews && listing.reviews.length > 0 && (
+            <>
+                <Separator className="my-8" />
+                <h3 className="font-headline text-xl font-bold mb-4">Reviews</h3>
                 <div className="space-y-6">
                 {listing.reviews.map((review, index) => (
                     <div key={review.id || index} className="bg-card p-4 rounded-lg border">
@@ -319,9 +319,8 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                     </div>
                 ))}
                 </div>
-            ) : (
-                <p className="text-muted-foreground">No reviews for this listing yet.</p>
-            )}
+            </>
+          )}
 
             {canReview && (
               <>
