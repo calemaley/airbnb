@@ -32,6 +32,14 @@
         "location": {
           "type": "string"
         },
+        "lat": {
+            "type": "number",
+            "description": "The latitude of the property."
+        },
+        "lng": {
+            "type": "number",
+            "description": "The longitude of the property."
+        },
         "description": {
           "type": "string"
         },

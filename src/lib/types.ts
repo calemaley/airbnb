@@ -30,6 +30,8 @@ export interface Accommodation {
   userId: string;
   hostName?: string;
   hostPhoneNumber?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface UserProfile {

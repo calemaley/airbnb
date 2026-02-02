@@ -11,6 +11,7 @@ import { suggestCategory } from "@/ai/flows/category-suggestion";
 import type { SuggestCategoryInput } from "@/ai/flows/category-suggestion";
 import Image from "next/image";
 import { notFound, useRouter } from "next/navigation";
+import LocationInput from "@/components/listings/LocationInput";
 
 
 import { Button } from "@/components/ui/button"
@@ -63,7 +64,9 @@ const formSchema = z.object({
   name: z.string().min(5, "Title must be at least 5 characters long."),
   hostName: z.string().min(3, "Host name is required."),
   hostPhoneNumber: z.string().min(10, "A valid phone number is required."),
-  location: z.string().min(3, "Location is required."),
+  location: z.string().min(3, "Please select a valid location from the map search."),
+  lat: z.number({ required_error: "Please select a location from the map."}),
+  lng: z.number({ required_error: "Please select a location from the map."}),
   description: z.string().min(20, "Description must be at least 20 characters long.").max(5000, "Description must be 5000 characters or less."),
   pricePerNight: z.coerce.number().min(1000, "Price must be at least KES 1000."),
   priceType: z.enum(["Fixed", "Negotiable"]),
@@ -296,21 +299,29 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
                         />
                     </div>
 
+                    <FormField
+                        control={form.control}
+                        name="location"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel className="text-lg">Location</FormLabel>
+                            <FormDescription>
+                                Search for the property address and a pin will be placed on the map.
+                            </FormDescription>
+                            <FormControl>
+                                <LocationInput 
+                                    setValue={form.setValue}
+                                    initialCenter={listing.lat && listing.lng ? { lat: listing.lat, lng: listing.lng } : undefined}
+                                    initialAddress={listing.location}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
                     <div className="grid md:grid-cols-2 gap-8">
-                        <FormField
-                            control={form.control}
-                            name="location"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel className="text-lg">Location</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="e.g. Makutano, Meru Town" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
+                         <FormField
                             control={form.control}
                             name="pricePerNight"
                             render={({ field }) => (
@@ -323,37 +334,37 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
                                 </FormItem>
                             )}
                         />
+                         <FormField
+                            control={form.control}
+                            name="priceType"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                    <FormLabel className="text-lg">Price Type</FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        className="flex items-center space-x-4"
+                                        >
+                                        <FormItem className="flex items-center space-x-2 space-y-0">
+                                            <FormControl>
+                                            <RadioGroupItem value="Fixed" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">Fixed</FormLabel>
+                                        </FormItem>
+                                        <FormItem className="flex items-center space-x-2 space-y-0">
+                                            <FormControl>
+                                            <RadioGroupItem value="Negotiable" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">Negotiable</FormLabel>
+                                        </FormItem>
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
-                     <FormField
-                        control={form.control}
-                        name="priceType"
-                        render={({ field }) => (
-                            <FormItem className="space-y-3">
-                                <FormLabel className="text-lg">Price Type</FormLabel>
-                                <FormControl>
-                                    <RadioGroup
-                                    onValueChange={field.onChange}
-                                    value={field.value}
-                                    className="flex items-center space-x-4"
-                                    >
-                                    <FormItem className="flex items-center space-x-2 space-y-0">
-                                        <FormControl>
-                                        <RadioGroupItem value="Fixed" />
-                                        </FormControl>
-                                        <FormLabel className="font-normal">Fixed</FormLabel>
-                                    </FormItem>
-                                    <FormItem className="flex items-center space-x-2 space-y-0">
-                                        <FormControl>
-                                        <RadioGroupItem value="Negotiable" />
-                                        </FormControl>
-                                        <FormLabel className="font-normal">Negotiable</FormLabel>
-                                    </FormItem>
-                                    </RadioGroup>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
 
                     <FormField
                     control={form.control}
@@ -553,7 +564,3 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
     </div>
   )
 }
-
-    
-
-    
