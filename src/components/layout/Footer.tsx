@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { Hotel, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Hotel } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -35,9 +35,22 @@ export default function Footer() {
           <div>
             <h3 className="font-bold mb-4 font-headline text-lg">Connect</h3>
             <div className="flex space-x-4">
-              <Link href="#" className="hover:text-primary"><Facebook /></Link>
-              <Link href="#" className="hover:text-primary"><Twitter /></Link>
-              <Link href="#" className="hover:text-primary"><Instagram /></Link>
+              <Link href="https://www.tiktok.com/@stayskenya?_r=1&_t=ZP-93a5Mw4YS34" className="hover:text-primary" target="_blank" rel="noopener noreferrer">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-6 w-6"
+                  >
+                    <path d="M21 7.917v4.034a9.948 9.948 0 0 1 -5 -1.951v4.5a6.5 6.5 0 1 1 -8 -6.326v4.326a2.5 2.5 0 1 0 4 2v-11.5h4.083a6.005 6.005 0 0 0 4.917 4.917z" />
+                  </svg>
+              </Link>
             </div>
           </div>
         </div>
