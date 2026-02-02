@@ -4,7 +4,6 @@ import { MapPin, Hotel } from 'lucide-react';
 import type { Accommodation } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Rating } from '@/components/ui/rating';
 import { PremiumBadge } from '../ui/premium-badge';
 
 interface AccommodationCardProps {
@@ -51,7 +50,6 @@ export function AccommodationCard({ listing }: AccommodationCardProps) {
               <span className="font-bold text-lg">KES {listing.pricePerNight.toLocaleString()}</span>
               <span className="text-sm text-muted-foreground"> / night</span>
             </div>
-            {listing.rating > 0 && <Rating rating={listing.rating} size={16} />}
           </div>
         </CardContent>
       </Link>

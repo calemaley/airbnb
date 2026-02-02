@@ -5,7 +5,6 @@ export type Category = 'Budget' | 'Mid-range' | 'Luxury';
 export interface Review {
   id: string;
   author: string;
-  rating: number;
   comment: string;
   date: string;
   userId: string;
@@ -21,7 +20,6 @@ export interface Accommodation {
   description: string;
   images: string[];
   amenities: (Amenity | string)[];
-  rating: number;
   reviews: Review[];
   host?: {
     name: string;

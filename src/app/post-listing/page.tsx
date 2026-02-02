@@ -169,7 +169,6 @@ export default function PostListingPage() {
       const newListingData = {
         ...values,
         userId: user.uid,
-        rating: 0,
         images: imageUrls,
         reviews: [],
       };

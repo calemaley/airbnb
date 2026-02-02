@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Rating } from '@/components/ui/rating';
 import { PremiumBadge } from '@/components/ui/premium-badge';
 import {
   Carousel,
@@ -30,13 +29,12 @@ import {
   Clapperboard,
   User as UserIcon,
   Phone,
-  Star,
 } from 'lucide-react';
 import type { Amenity, Accommodation, Booking, Review } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useDoc, useFirestore, useUser, useCollection } from '@/firebase';
-import { doc, collection, query, where, addDoc, updateDoc } from 'firebase/firestore';
+import { doc, collection, query, where, updateDoc } from 'firebase/firestore';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
@@ -78,7 +76,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const [guests, setGuests] = useState(1);
   const [isBooking, setIsBooking] = useState(false);
 
-  const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [today, setToday] = useState<Date | null>(null);
@@ -164,8 +161,8 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !profile || !listing || !listingRef) return;
-    if (reviewRating === 0 || !reviewComment) {
-        toast({ variant: 'destructive', title: 'Incomplete Review', description: 'Please provide a rating and a comment.' });
+    if (!reviewComment) {
+        toast({ variant: 'destructive', title: 'Incomplete Review', description: 'Please provide a comment.' });
         return;
     }
     setIsSubmittingReview(true);
@@ -174,23 +171,18 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
             id: user.uid, // Using user id to ensure one review per user per listing
             userId: user.uid,
             author: profile.name,
-            rating: reviewRating,
             comment: reviewComment,
             date: new Date().toISOString(),
         };
 
         const newReviews = [...listing.reviews, newReview];
-        const newTotalRating = newReviews.reduce((sum, r) => sum + r.rating, 0);
-        const newAverageRating = newTotalRating / newReviews.length;
 
         await updateDoc(listingRef, {
             reviews: newReviews,
-            rating: newAverageRating,
         });
 
         toast({ title: 'Review Submitted', description: 'Thank you for your feedback!' });
         setReviewComment('');
-        setReviewRating(0);
     } catch (error: any) {
         console.error('Failed to submit review:', error);
         toast({ variant: 'destructive', title: 'Submission Failed', description: error.message });
@@ -220,8 +212,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
       <div className="mb-6">
         <h1 className="font-headline text-4xl font-bold">{listing.name}</h1>
         <div className="flex items-center text-muted-foreground mt-2 text-lg gap-4">
-          <Rating rating={listing.rating} size={20}/>
-          <span className="text-muted-foreground">•</span>
           <div className="flex items-center">
              <MapPin className="h-5 w-5 mr-1" />
              <span>{listing.location}</span>
@@ -321,7 +311,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                             <div className="flex-1">
                                 <div className="flex items-center justify-between">
                                     <p className="font-bold">{review.author}</p>
-                                    <Rating rating={review.rating} size={16} showText={false}/>
                                 </div>
                                 <p className="text-sm text-muted-foreground mt-1">{new Date(review.date).toLocaleDateString()}</p>
                                 <p className="mt-2 text-foreground/90">{review.comment}</p>
@@ -344,16 +333,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleReviewSubmit} className="space-y-4">
-                            <div>
-                                <Label>Your Rating</Label>
-                                <div className="flex gap-1 mt-2">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button type="button" key={star} onClick={() => setReviewRating(star)}>
-                                        <Star className={cn("h-8 w-8 transition-colors", star <= reviewRating ? "text-primary fill-primary" : "text-gray-300 hover:text-primary/50")} />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
                              <div>
                                 <Label htmlFor="reviewComment">Your Comment</Label>
                                 <Textarea 
@@ -383,9 +362,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                 <span className="text-base font-normal text-muted-foreground"> / night</span>
                  {listing.priceType && <Badge variant="secondary" className="ml-2">{listing.priceType}</Badge>}
               </CardTitle>
-              <CardDescription>
-                <Rating rating={listing.rating} size={16}/>
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-2">
