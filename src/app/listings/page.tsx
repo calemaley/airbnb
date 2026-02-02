@@ -1,14 +1,20 @@
 import AllListings from '@/components/listings/AllListings';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'All Listings in Meru',
+  description: 'Browse our full range of accommodations. Starting with Meru, we are expanding across Kenya. Use our filters to find the perfect stay that matches your needs, from location and price to specific amenities.',
+};
 
 export default function ListingsPage() {
   return (
     <div>
       <div className="bg-secondary">
         <div className="container mx-auto px-4 py-12 text-center">
-            <h1 className="text-4xl font-headline font-bold">Explore Our Stays</h1>
-            <p className="mt-2 text-lg text-secondary-foreground max-w-2xl mx-auto">Find the perfect spot for your next Kenyan adventure, from budget-friendly rooms to luxurious villas.</p>
+            <h1 className="text-4xl font-headline font-bold">Explore All Accommodations</h1>
+            <p className="mt-2 text-lg text-secondary-foreground max-w-2xl mx-auto">Currently featuring stays in Meru, we are expanding across Kenya. Find the perfect spot for your next adventure by filtering by location, price, and amenities.</p>
         </div>
       </div>
       <Suspense fallback={

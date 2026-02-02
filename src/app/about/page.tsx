@@ -11,7 +11,7 @@ export default function AboutPage() {
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">About StaysKenya</h1>
                     <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-                        Connecting you with the heart of Meru, one stay at a time.
+                        Starting in Meru, we're on a mission to connect you with the heart of Kenya, one stay at a time.
                     </p>
                 </div>
 
@@ -32,7 +32,7 @@ export default function AboutPage() {
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-3xl font-headline font-bold mb-4">Our Mission</h2>
                     <p className="text-lg mb-8 text-foreground/80">
-                        StaysKenya was born from a simple idea: to make discovering and booking unique, local accommodations in Meru easier and more trustworthy than ever. We are a platform built with a deep appreciation for Meru's diverse landscapes and rich culture. Our goal is to empower local hosts and provide travelers with authentic experiences, whether it's a cozy apartment in Meru Town, a serene cottage near the Imenti Forest, or a rustic farm stay with views of Mount Kenya.
+                        StaysKenya was born from a simple idea: to make discovering and booking unique, local accommodations easier and more trustworthy than ever. We are starting our journey in Meru, a region of diverse landscapes and rich culture, with a vision to expand across all of Kenya. Our goal is to empower local hosts and provide travelers with authentic experiences, beginning with cozy apartments in Meru Town, serene cottages near the Imenti Forest, and rustic farm stays with views of Mount Kenya.
                     </p>
 
                     <h2 className="text-3xl font-headline font-bold mb-6">Why Trust StaysKenya?</h2>
@@ -43,9 +43,9 @@ export default function AboutPage() {
                                     <Leaf className="h-8 w-8 text-primary" />
                                 </div>
                             </div>
-                            <h3 className="font-headline font-semibold text-xl mb-2">Local & Meru Focus</h3>
+                            <h3 className="font-headline font-semibold text-xl mb-2">Local Focus, National Vision</h3>
                             <p className="text-muted-foreground">
-                                We are 100% focused on Meru. This allows us to ensure quality and build strong relationships with our hosts, offering you a curated selection of the best local stays.
+                                We are starting with a 100% focus on Meru to ensure quality and build strong host relationships. This allows us to offer you a curated selection of the best local stays as we grow and expand our reach across Kenya.
                             </p>
                         </div>
                         <div className="text-center p-6 bg-card border rounded-lg">
@@ -56,7 +56,7 @@ export default function AboutPage() {
                             </div>
                             <h3 className="font-headline font-semibold text-xl mb-2">Verified Listings</h3>
                             <p className="text-muted-foreground">
-                                Every listing on our platform undergoes a verification process by our team. We ensure that what you see is what you get, giving you peace of mind when you book.
+                                Every listing on our platform undergoes a verification process by our team. We ensure that what you see is what you get, giving you peace of mind when you book, wherever you are in Kenya.
                             </p>
                         </div>
                         <div className="text-center p-6 bg-card border rounded-lg">
@@ -67,7 +67,7 @@ export default function AboutPage() {
                             </div>
                             <h3 className="font-headline font-semibold text-xl mb-2">Supporting Communities</h3>
                             <p className="text-muted-foreground">
-                                By booking with StaysKenya, you are directly supporting local entrepreneurs and contributing to the Meru economy. We believe in travel that benefits everyone.
+                                By booking with StaysKenya, you are directly supporting local entrepreneurs and contributing to local economies. We believe in travel that benefits everyone, from Meru to the rest of Kenya.
                             </p>
                         </div>
                     </div>

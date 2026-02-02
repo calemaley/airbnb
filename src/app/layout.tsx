@@ -7,8 +7,33 @@ import Footer from '@/components/layout/Footer';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'StaysKenya - Find Airbnbs & Guest Rooms in Kenya',
-  description: 'Discover and book unique accommodations, from budget to luxury, across Kenya. Your local guide to the perfect stay.',
+  title: {
+    default: 'StaysKenya - Find Airbnbs & Guest Rooms in Meru',
+    template: '%s | StaysKenya',
+  },
+  description: 'Find Airbnbs & Guest Rooms in Meru. Starting with Meru, expanding across Kenya.',
+  applicationName: 'StaysKenya',
+  keywords: ['Meru', 'Kenya', 'Airbnb', 'Guest Rooms', 'Holiday Homes', 'Vacation Rentals', 'Accommodation', 'Travel', 'Booking'],
+  authors: [{ name: 'StaysKenya', url: 'https://www.stayskenya.top' }],
+  creator: 'StaysKenya',
+  publisher: 'StaysKenya',
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    url: 'https://www.stayskenya.top',
+    title: 'StaysKenya - Find Airbnbs & Guest Rooms in Meru',
+    description: 'Find Airbnbs & Guest Rooms in Meru. Starting with Meru, expanding across Kenya.',
+    siteName: 'StaysKenya',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'StaysKenya - Find Airbnbs & Guest Rooms in Meru',
+    description: 'Find Airbnbs & Guest Rooms in Meru. Starting with Meru, expanding across Kenya.',
+  },
+  themeColor: '#ffffff',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
