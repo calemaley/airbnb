@@ -316,7 +316,6 @@ export default function PostListingPage() {
                                     </FormItem>
                                     </RadioGroup>
                                 </FormControl>
-                                <FormDescription>Long stays can be negotiable.</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -530,5 +529,7 @@ export default function PostListingPage() {
     </div>
   )
 }
+
+    
 
     
