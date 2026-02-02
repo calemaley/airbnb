@@ -55,9 +55,6 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t border-primary/20 pt-8 text-center text-sm space-y-4">
-          <p className="max-w-2xl mx-auto text-muted-foreground">
-            <strong>Early Access Notice:</strong> StaysKenya is currently in early access. We are onboarding a limited number of hosts as we refine features and improve the platform experience.
-          </p>
           <p className='max-w-2xl mx-auto'>
             <strong>Disclaimer:</strong> StaysKenya is an advertising service only. All transactions and agreements are a private matter between the guest and the host.
           </p>
