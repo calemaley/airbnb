@@ -11,7 +11,6 @@ import { suggestCategory } from "@/ai/flows/category-suggestion";
 import type { SuggestCategoryInput } from "@/ai/flows/category-suggestion";
 import Image from "next/image";
 import { notFound, useRouter } from "next/navigation";
-import LocationInput from "@/components/listings/LocationInput";
 
 
 import { Button } from "@/components/ui/button"
@@ -64,9 +63,7 @@ const formSchema = z.object({
   name: z.string().min(5, "Title must be at least 5 characters long."),
   hostName: z.string().min(3, "Host name is required."),
   hostPhoneNumber: z.string().min(10, "A valid phone number is required."),
-  location: z.string().min(3, "Please select a valid location from the map search."),
-  lat: z.number({ required_error: "Please select a location from the map."}),
-  lng: z.number({ required_error: "Please select a location from the map."}),
+  location: z.string().min(3, "Location is required."),
   description: z.string().min(20, "Description must be at least 20 characters long.").max(5000, "Description must be 5000 characters or less."),
   pricePerNight: z.coerce.number().min(1000, "Price must be at least KES 1000."),
   priceType: z.enum(["Fixed", "Negotiable"]),
@@ -305,15 +302,11 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel className="text-lg">Location</FormLabel>
-                            <FormDescription>
-                                Search for the property address and a pin will be placed on the map.
+                             <FormDescription>
+                                Enter the full address of the property (e.g., "123 Koinange Street, Meru Town, Kenya").
                             </FormDescription>
                             <FormControl>
-                                <LocationInput 
-                                    setValue={form.setValue}
-                                    initialCenter={listing.lat && listing.lng ? { lat: listing.lat, lng: listing.lng } : undefined}
-                                    initialAddress={listing.location}
-                                />
+                               <Input placeholder="e.g., 123 Koinange Street, Meru Town, Kenya" {...field} />
                             </FormControl>
                             <FormMessage />
                             </FormItem>

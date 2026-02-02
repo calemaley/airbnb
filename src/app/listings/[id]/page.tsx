@@ -46,7 +46,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import ListingMap from '@/components/listings/ListingMap';
 
 const amenityIcons: Record<Amenity, React.ReactNode> = {
   wifi: <Wifi className="h-5 w-5 mr-2" />,
@@ -280,11 +279,13 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
            <Separator className="my-8" />
 
             <h3 className="font-headline text-xl font-bold mb-4">Location</h3>
-            {listing.lat && listing.lng ? (
-                <ListingMap lat={listing.lat} lng={listing.lng} />
-            ) : (
-                <p className="text-muted-foreground">Location map is not available for this listing.</p>
-            )}
+            <p className="text-muted-foreground mb-4">{listing.location}</p>
+            <Button asChild>
+                <a href={`https://www.google.com/maps?q=${encodeURIComponent(listing.location)}`} target="_blank" rel="noopener noreferrer">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    View on Google Maps
+                </a>
+            </Button>
 
           {(listing.hostName || listing.hostPhoneNumber) && (
             <>
