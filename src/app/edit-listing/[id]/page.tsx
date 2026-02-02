@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useEffect, useMemo } from "react";
@@ -349,6 +350,7 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
                                     </FormItem>
                                     </RadioGroup>
                                 </FormControl>
+                                <FormDescription>Long stays can be negotiable.</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -552,3 +554,5 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
     </div>
   )
 }
+
+    
